@@ -89,6 +89,91 @@
             accent-color: #d4af37;
         }
 
+        .fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37 0%, #c9a22e 100%);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            color: #1a1a2e;
+            font-size: 1.5em;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fullscreen-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(212, 175, 55, 0.6);
+            background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+        }
+
+        .fullscreen-btn:active {
+            transform: scale(0.95);
+        }
+
+        .fullscreen-icon {
+            line-height: 1;
+        }
+
+        /* Full screen mode styles */
+        body.fullscreen-mode {
+            overflow: hidden;
+        }
+
+        body.fullscreen-mode .host-mode-toggle,
+        body.fullscreen-mode .host-hint,
+        body.fullscreen-mode .host-controls,
+        body.fullscreen-mode .advertisement-section,
+        body.fullscreen-mode .event-branding,
+        body.fullscreen-mode .last-updated {
+            display: none !important;
+        }
+
+        body.fullscreen-mode .scoreboard-container {
+            max-width: 100%;
+            width: 100vw;
+            height: 100vh;
+            border-radius: 0;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.fullscreen-mode .scoreboard {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        body.fullscreen-mode .scoreboard-header {
+            margin-bottom: 30px;
+        }
+
+        body.fullscreen-mode .fullscreen-btn {
+            background: linear-gradient(135deg, #ff5555 0%, #cc4444 100%);
+            border-color: rgba(255, 85, 85, 0.5);
+        }
+
+        body.fullscreen-mode .fullscreen-btn:hover {
+            background: linear-gradient(135deg, #ff6666 0%, #ff5555 100%);
+            box-shadow: 0 6px 25px rgba(255, 85, 85, 0.6);
+        }
+
+        body.fullscreen-mode .fullscreen-icon::before {
+            content: '✕';
+        }
+
+        body.fullscreen-mode .fullscreen-icon {
+            font-size: 1.2em;
+        }
+
         .scoreboard-header {
             text-align: center;
             margin-bottom: 40px;
@@ -808,6 +893,18 @@
             .event-branding p {
                 font-size: 0.9em;
             }
+
+            .fullscreen-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1.3em;
+                top: 15px;
+                right: 15px;
+            }
+
+            body.fullscreen-mode .scoreboard-container {
+                padding: 30px 20px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -940,6 +1037,10 @@
                 🎮 Host Mode
             </label>
         </div>
+
+        <button class="fullscreen-btn" id="fullscreenBtn" title="Toggle Full Screen">
+            <span class="fullscreen-icon">⛶</span>
+        </button>
 
         <div class="scoreboard-header">
             <div class="trophy-icon">🏆</div>
@@ -1361,6 +1462,67 @@
         // Make functions globally available
         window.addNewTeam = addNewTeam;
         window.resetAllScores = resetAllScores;
+
+        // Full screen mode toggle
+        let isFullscreen = false;
+        
+        document.getElementById('fullscreenBtn').addEventListener('click', function() {
+            isFullscreen = !isFullscreen;
+            
+            if (isFullscreen) {
+                // Enter full screen
+                document.body.classList.add('fullscreen-mode');
+                
+                // Try to use browser's fullscreen API
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.log('Fullscreen request failed:', err);
+                    });
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) {
+                    document.documentElement.msRequestFullscreen();
+                }
+            } else {
+                // Exit full screen
+                document.body.classList.remove('fullscreen-mode');
+                
+                // Exit browser's fullscreen
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().catch(err => {
+                        console.log('Exit fullscreen failed:', err);
+                    });
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        });
+
+        // Handle browser fullscreen changes (ESC key, etc)
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+        function handleFullscreenChange() {
+            if (!document.fullscreenElement && 
+                !document.webkitFullscreenElement && 
+                !document.msFullscreenElement) {
+                // User exited fullscreen (probably with ESC)
+                isFullscreen = false;
+                document.body.classList.remove('fullscreen-mode');
+            }
+        }
+
+        // Keyboard shortcut: Press 'F' to toggle fullscreen
+        document.addEventListener('keydown', function(e) {
+            // Only if not typing in an input
+            if (e.target.tagName !== 'INPUT' && e.key.toLowerCase() === 'f') {
+                e.preventDefault();
+                document.getElementById('fullscreenBtn').click();
+            }
+        });
     </script>
 </body>
 </html>
