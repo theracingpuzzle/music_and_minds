@@ -294,6 +294,52 @@
             display: block;
         }
 
+        .host-controls {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .host-controls.active {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .add-team-btn,
+        .reset-scores-btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: 700;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .add-team-btn {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+        }
+
+        .add-team-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .reset-scores-btn {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: white;
+        }
+
+        .reset-scores-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.4);
+        }
+
         .last-updated {
             text-align: center;
             margin-top: 25px;
@@ -369,6 +415,17 @@
             .rank-1 .team-total {
                 font-size: 1.8em;
             }
+
+            .host-controls {
+                flex-direction: column;
+            }
+
+            .add-team-btn,
+            .reset-scores-btn {
+                width: 100%;
+                padding: 12px 20px;
+                font-size: 1em;
+            }
         }
 
         @media (max-width: 480px) {
@@ -429,6 +486,11 @@
             ✏️ Host Mode Active - Click any name or score to edit!
         </div>
 
+        <div class="host-controls" id="hostControls">
+            <button class="add-team-btn" onclick="addNewTeam()">+ Add New Team</button>
+            <button class="reset-scores-btn" onclick="resetAllScores()">Reset All Scores</button>
+        </div>
+
         <div class="last-updated" id="lastUpdated">
             Loading...
         </div>
@@ -455,7 +517,8 @@
                 if (password === HOST_PASSWORD) {
                     isHostMode = true;
                     document.getElementById('hostHint').classList.add('active');
-                    alert('Host mode activated! Click any team name or score to edit.');
+                    document.getElementById('hostControls').classList.add('active');
+                    alert('Host mode activated! Click any team name or score to edit, or add new teams.');
                     // Re-render to show input fields
                     if (db) {
                         db.collection('quiz').doc('teams').get().then((doc) => {
@@ -469,6 +532,7 @@
             } else {
                 isHostMode = false;
                 document.getElementById('hostHint').classList.remove('active');
+                document.getElementById('hostControls').classList.remove('active');
                 // Re-render to show display fields
                 if (db) {
                     db.collection('quiz').doc('teams').get().then((doc) => {
@@ -509,12 +573,9 @@
             const doc = await teamsRef.get();
             
             if (!doc.exists) {
+                // Start with empty teams object - host will add teams on the night
                 await teamsRef.set({
-                    team0: { name: "Team Alpha", rounds: [8, 7, 0, 0], total: 15 },
-                    team1: { name: "Team Bravo", rounds: [6, 9, 0, 0], total: 15 },
-                    team2: { name: "Team Charlie", rounds: [7, 6, 0, 0], total: 13 },
-                    team3: { name: "Team Delta", rounds: [5, 7, 0, 0], total: 12 },
-                    team4: { name: "Team Echo", rounds: [6, 5, 0, 0], total: 11 }
+                    initialized: true
                 });
             }
         }
@@ -523,10 +584,22 @@
             if (!data) return;
 
             const teams = Object.entries(data)
+                .filter(([key]) => key.startsWith('team')) // Filter out 'initialized' key
                 .map(([key, value]) => ({ key, ...value }))
                 .sort((a, b) => b.total - a.total);
 
             const scoreboardDiv = document.getElementById('scoreboard');
+            
+            if (teams.length === 0) {
+                scoreboardDiv.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #999;">
+                        <p style="font-size: 1.2em; margin-bottom: 10px;">No teams yet!</p>
+                        <p style="font-size: 1em;">${isHostMode ? 'Click "+ Add New Team" below to get started.' : 'The host will add teams soon.'}</p>
+                    </div>
+                `;
+                return;
+            }
+
             scoreboardDiv.innerHTML = teams.map((team, index) => {
                 let rankClass = '';
                 let rankEmoji = index + 1;
@@ -651,6 +724,70 @@
             });
             document.getElementById('lastUpdated').textContent = `Last updated: ${timeString}`;
         }
+
+        // Add new team
+        async function addNewTeam() {
+            const teamName = prompt('Enter new team name:');
+            if (!teamName || !teamName.trim()) {
+                alert('Team name cannot be empty!');
+                return;
+            }
+
+            try {
+                const teamsRef = db.collection('quiz').doc('teams');
+                const doc = await teamsRef.get();
+                const data = doc.data();
+
+                // Find next available team key
+                let teamIndex = 0;
+                while (data[`team${teamIndex}`]) {
+                    teamIndex++;
+                }
+
+                const newTeamKey = `team${teamIndex}`;
+                data[newTeamKey] = {
+                    name: teamName.trim(),
+                    rounds: [0, 0, 0, 0],
+                    total: 0
+                };
+
+                await teamsRef.set(data);
+                alert(`Team "${teamName}" added!`);
+            } catch (error) {
+                console.error('Error adding team:', error);
+                alert('Error adding team!');
+            }
+        }
+
+        // Reset all scores to zero
+        async function resetAllScores() {
+            const confirm = window.confirm('Are you sure you want to reset ALL scores to 0? This cannot be undone!');
+            if (!confirm) return;
+
+            try {
+                const teamsRef = db.collection('quiz').doc('teams');
+                const doc = await teamsRef.get();
+                const data = doc.data();
+
+                // Reset all teams to 0
+                Object.keys(data).forEach(key => {
+                    if (data[key].rounds) {
+                        data[key].rounds = [0, 0, 0, 0];
+                        data[key].total = 0;
+                    }
+                });
+
+                await teamsRef.set(data);
+                alert('All scores reset to 0!');
+            } catch (error) {
+                console.error('Error resetting scores:', error);
+                alert('Error resetting scores!');
+            }
+        }
+
+        // Make functions globally available
+        window.addNewTeam = addNewTeam;
+        window.resetAllScores = resetAllScores;
     </script>
 </body>
 </html>
