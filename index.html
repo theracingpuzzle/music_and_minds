@@ -644,29 +644,204 @@
         }
 
         @media (max-width: 768px) {
-            .scoreboard-container {
-                padding: 30px 25px;
+            body {
+                padding: 10px;
             }
+
+            .scoreboard-container {
+                padding: 25px 20px;
+                border-radius: 20px;
+            }
+
+            .setup-notice {
+                padding: 20px 15px;
+                font-size: 0.9em;
+            }
+
+            .setup-notice h3 {
+                font-size: 1.2em;
+            }
+
+            .host-mode-toggle {
+                padding: 15px 20px;
+                margin-bottom: 25px;
+            }
+
+            .host-mode-toggle label {
+                font-size: 1em;
+                letter-spacing: 1px;
+            }
+
             .scoreboard-title {
+                font-size: 2em;
+                letter-spacing: 2px;
+            }
+
+            .scoreboard-subtitle {
+                font-size: 1em;
+                letter-spacing: 2px;
+            }
+
+            .trophy-icon {
+                font-size: 2.5em;
+                margin-bottom: 15px;
+            }
+
+            .round-indicator {
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 12px 15px;
+                margin-top: 12px;
+            }
+
+            .round-badge {
+                padding: 6px 12px;
+                font-size: 0.75em;
+            }
+
+            .scoreboard {
+                gap: 12px;
+            }
+
+            .team-score {
+                padding: 18px 20px;
+                gap: 15px;
+                grid-template-columns: 50px 1fr 80px;
+            }
+
+            .team-rank {
+                font-size: 1.8em;
+                min-width: 50px;
+            }
+
+            .rank-1 .team-rank {
                 font-size: 2.2em;
             }
-            .trophy-icon {
-                font-size: 3em;
-            }
-            .team-name {
-                font-size: 1.1em;
-            }
-            .team-total {
+
+            .rank-2 .team-rank,
+            .rank-3 .team-rank {
                 font-size: 1.8em;
             }
-            .rank-1 .team-total {
-                font-size: 2.3em;
+
+            .team-name {
+                font-size: 1.2em;
+                letter-spacing: 0.5px;
             }
+
+            .rank-1 .team-name {
+                font-size: 1.3em;
+            }
+
+            .team-total {
+                font-size: 2em;
+                min-width: 70px;
+            }
+
+            .rank-1 .team-total {
+                font-size: 2.5em;
+            }
+
+            .score-controls {
+                padding: 25px 20px;
+                margin-top: 30px;
+            }
+
+            .score-controls h3 {
+                font-size: 1.3em;
+                margin-bottom: 20px;
+            }
+
+            .round-selector {
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+
+            .round-selector button {
+                padding: 10px 18px;
+                font-size: 0.9em;
+                flex: 1;
+                min-width: 100px;
+            }
+
+            .team-control {
+                flex-direction: column;
+                gap: 12px;
+                padding: 15px;
+                align-items: stretch;
+            }
+
+            .team-control label {
+                font-size: 1.1em;
+                text-align: center;
+            }
+
+            .team-control input {
+                width: 100%;
+                font-size: 1.2em;
+                padding: 12px;
+            }
+
+            .team-control button {
+                width: 100%;
+                padding: 12px;
+                font-size: 1em;
+            }
+
+            .last-updated {
+                font-size: 0.85em;
+                padding: 12px;
+                margin-top: 25px;
+            }
+
+            .event-branding {
+                margin-top: 30px;
+                padding-top: 25px;
+            }
+
+            .event-branding h3 {
+                font-size: 1.2em;
+            }
+
+            .event-branding p {
+                font-size: 0.95em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .scoreboard-title {
+                font-size: 1.6em;
+                letter-spacing: 1px;
+            }
+
+            .team-score {
+                padding: 15px;
+            }
+
             .team-rank {
                 font-size: 1.5em;
+                min-width: 40px;
             }
-            .team-control {
-                flex-wrap: wrap;
+
+            .rank-1 .team-rank {
+                font-size: 2em;
+            }
+
+            .team-name {
+                font-size: 1em;
+            }
+
+            .rank-1 .team-name {
+                font-size: 1.1em;
+            }
+
+            .team-total {
+                font-size: 1.6em;
+                min-width: 60px;
+            }
+
+            .rank-1 .team-total {
+                font-size: 2em;
             }
         }
     </style>
@@ -753,24 +928,32 @@
         const HOST_PASSWORD = 'music2024';
 
         function toggleHostMode() {
+            console.log('Toggle host mode called');
             const checkbox = document.getElementById('hostModeCheckbox');
+            console.log('Checkbox checked:', checkbox.checked);
             
             if (checkbox.checked) {
                 if (!isHostAuthenticated) {
                     const password = prompt('Enter host password:');
+                    console.log('Password entered:', password ? 'yes' : 'no');
                     
                     if (password === HOST_PASSWORD) {
+                        console.log('Password correct!');
                         isHostAuthenticated = true;
                         document.getElementById('scoreControls').style.display = 'block';
+                        alert('Host mode activated! You can now update scores.');
                     } else {
-                        alert('Incorrect password! Access denied.');
+                        console.log('Password incorrect');
+                        alert('Incorrect password! The password is: music2024');
                         checkbox.checked = false;
                         return;
                     }
                 } else {
+                    console.log('Already authenticated');
                     document.getElementById('scoreControls').style.display = 'block';
                 }
             } else {
+                console.log('Host mode disabled');
                 document.getElementById('scoreControls').style.display = 'none';
             }
         }
