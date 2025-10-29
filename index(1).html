@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music and Minds - Live Scoreboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(2px 2px at 25% 50%, #d4af37, transparent),
+                radial-gradient(2px 2px at 75% 25%, #ffd700, transparent),
+                radial-gradient(1px 1px at 50% 75%, #d4af37, transparent),
+                radial-gradient(1px 1px at 90% 40%, #ffd700, transparent);
+            background-size: 100% 100%, 100% 100%, 300px 300px, 400px 400px, 250px 250px, 350px 350px;
+            animation: sparkleMove 20s ease-in-out infinite;
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes sparkleMove {
+            0%, 100% { 
+                background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+                opacity: 0.4;
+            }
+            50% { 
+                background-position: 100% 100%, 100% 100%, 100% 100%, -100% -100%, 50% 50%, -50% -50%;
+                opacity: 0.6;
+            }
+        }
+
+        .scoreboard-container {
+            width: 100%;
+            max-width: 1200px;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            box-shadow: 
+                0 30px 90px rgba(0, 0, 0, 0.9),
+                0 0 0 1px rgba(212, 175, 55, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            padding: 50px;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            margin: 20px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(40px) scale(0.95);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .setup-notice {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.15) 0%, rgba(255, 152, 0, 0.15) 100%);
+            border: 2px solid rgba(255, 193, 7, 0.5);
+            color: #ffc107;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 35px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(255, 193, 7, 0.2);
+        }
+
+        .setup-notice h3 {
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .setup-notice p {
+            margin-bottom: 12px;
+            line-height: 1.8;
+            font-size: 1em;
+        }
+
+        .setup-notice code {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #ffd700;
+        }
+
+        .host-mode-toggle {
+            background: linear-gradient(135deg, rgba(42, 42, 62, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.4);
+            padding: 18px 30px;
+            border-radius: 15px;
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            margin-bottom: 35px;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .host-mode-toggle:hover {
+            border-color: rgba(212, 175, 55, 0.6);
+            box-shadow: 
+                0 12px 35px rgba(0, 0, 0, 0.6),
+                0 0 30px rgba(212, 175, 55, 0.15);
+        }
+
+        .host-mode-toggle label {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #d4af37;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .host-mode-toggle input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            accent-color: #d4af37;
+        }
+
+        .scoreboard-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .trophy-icon {
+            font-size: 4em;
+            margin-bottom: 25px;
+            animation: trophyFloat 3s ease-in-out infinite;
+            filter: drop-shadow(0 10px 20px rgba(212, 175, 55, 0.3));
+        }
+
+        @keyframes trophyFloat {
+            0%, 100% { 
+                transform: translateY(0) rotate(-2deg); 
+            }
+            50% { 
+                transform: translateY(-15px) rotate(2deg); 
+            }
+        }
+
+        .scoreboard-title {
+            font-size: 3.5em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffd700 0%, #d4af37 50%, #ffd700 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            animation: shimmer 3s ease-in-out infinite;
+            text-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .scoreboard-subtitle {
+            font-size: 1.3em;
+            color: #a89968;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .round-indicator {
+            display: inline-flex;
+            gap: 12px;
+            padding: 15px 30px;
+            background: rgba(42, 42, 62, 0.6);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        .round-badge {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(100, 100, 120, 0.3);
+            color: #888;
+            border: 2px solid rgba(100, 100, 120, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .round-badge.active {
+            background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+            color: #1a1a1a;
+            border-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+            transform: scale(1.1);
+        }
+
+        .round-badge.completed {
+            background: rgba(76, 175, 80, 0.3);
+            color: #4caf50;
+            border-color: rgba(76, 175, 80, 0.5);
+        }
+
+        .scoreboard-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .round-headers {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto auto auto auto;
+            gap: 15px;
+            padding: 15px 30px;
+            margin-bottom: 10px;
+            background: rgba(42, 42, 62, 0.4);
+            border-radius: 12px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .round-headers > span {
+            font-size: 0.9em;
+            font-weight: 700;
+            color: #d4af37;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .round-headers .header-rank {
+            min-width: 50px;
+        }
+
+        .round-headers .header-name {
+            text-align: left;
+        }
+
+        .round-headers .header-round {
+            min-width: 50px;
+            font-size: 0.85em;
+        }
+
+        .round-headers .header-total {
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .scoreboard {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .team-score {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto auto auto auto;
+            gap: 15px;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(42, 42, 62, 0.6) 0%, rgba(26, 26, 46, 0.8) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            padding: 20px 30px;
+            border-radius: 18px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: slideInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-score::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(180deg, transparent, #d4af37, transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        @keyframes slideInRight {
+            from { 
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .team-score:hover {
+            transform: translateX(8px) scale(1.02);
+            border-color: rgba(212, 175, 55, 0.5);
+            background: linear-gradient(135deg, rgba(50, 50, 70, 0.7) 0%, rgba(35, 35, 55, 0.9) 100%);
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(212, 175, 55, 0.15);
+        }
+
+        .team-score:hover::before {
+            opacity: 1;
+        }
+
+        .rank-1 {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.25) 0%, rgba(212, 175, 55, 0.15) 100%);
+            border: 3px solid #d4af37;
+            box-shadow: 
+                0 15px 50px rgba(212, 175, 55, 0.4),
+                inset 0 1px 0 rgba(255, 215, 0, 0.1);
+            transform: scale(1.03);
+        }
+
+        .rank-1:hover {
+            transform: translateX(8px) scale(1.05);
+            box-shadow: 
+                0 20px 60px rgba(212, 175, 55, 0.5),
+                0 0 50px rgba(255, 215, 0, 0.3);
+        }
+
+        .rank-1::before {
+            width: 6px;
+            background: linear-gradient(180deg, #ffd700, #d4af37, #ffd700);
+            opacity: 1;
+        }
+
+        .rank-2 {
+            border: 2px solid rgba(192, 192, 192, 0.4);
+            background: linear-gradient(135deg, rgba(192, 192, 192, 0.15) 0%, rgba(169, 169, 169, 0.1) 100%);
+        }
+
+        .rank-3 {
+            border: 2px solid rgba(205, 127, 50, 0.4);
+            background: linear-gradient(135deg, rgba(205, 127, 50, 0.15) 0%, rgba(184, 115, 51, 0.1) 100%);
+        }
+
+        .team-rank {
+            font-size: 1.8em;
+            font-weight: 900;
+            color: #666;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .rank-1 .team-rank {
+            color: #ffd700;
+            font-size: 2.5em;
+            text-shadow: 
+                0 0 20px rgba(255, 215, 0, 0.6),
+                0 0 40px rgba(255, 215, 0, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .rank-2 .team-rank {
+            color: #c0c0c0;
+            font-size: 2em;
+        }
+
+        .rank-3 .team-rank {
+            color: #cd7f32;
+            font-size: 2em;
+        }
+
+        .team-name {
+            font-size: 1.5em;
+            color: #ffffff;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .rank-1 .team-name {
+            color: #ffd700;
+            font-size: 1.7em;
+        }
+
+        .round-score {
+            font-size: 1.2em;
+            color: #999;
+            font-weight: 600;
+            text-align: center;
+            min-width: 50px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .round-score.has-score {
+            color: #d4af37;
+        }
+
+        .team-total {
+            font-size: 2.5em;
+            color: #ffd700;
+            font-weight: 900;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 2px 15px rgba(212, 175, 55, 0.4);
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .rank-1 .team-total {
+            font-size: 3em;
+            text-shadow: 
+                0 0 30px rgba(255, 215, 0, 0.6),
+                0 4px 20px rgba(212, 175, 55, 0.4);
+            animation: scoreGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes scoreGlow {
+            0%, 100% { 
+                text-shadow: 
+                    0 0 30px rgba(255, 215, 0, 0.6),
+                    0 4px 20px rgba(212, 175, 55, 0.4);
+            }
+            50% { 
+                text-shadow: 
+                    0 0 50px rgba(255, 215, 0, 0.8),
+                    0 4px 30px rgba(212, 175, 55, 0.6);
+            }
+        }
+
+        .score-controls {
+            background: linear-gradient(135deg, rgba(42, 42, 62, 0.4) 0%, rgba(26, 26, 46, 0.6) 100%);
+            border: 2px dashed rgba(212, 175, 55, 0.4);
+            padding: 45px;
+            border-radius: 20px;
+            margin-top: 45px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .score-controls h3 {
+            margin-bottom: 25px;
+            color: #ffd700;
+            font-size: 1.7em;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 800;
+        }
+
+        .round-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .round-selector button {
+            padding: 12px 25px;
+            font-size: 1em;
+            background: rgba(100, 100, 120, 0.3);
+            color: #888;
+            border: 2px solid rgba(100, 100, 120, 0.3);
+        }
+
+        .round-selector button.active {
+            background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+            color: #1a1a1a;
+            border-color: #ffd700;
+        }
+
+        .team-control {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 18px;
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(20, 20, 40, 0.9) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.25);
+            padding: 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .team-control:hover {
+            border-color: rgba(212, 175, 55, 0.5);
+            background: linear-gradient(135deg, rgba(35, 35, 55, 0.9) 0%, rgba(26, 26, 46, 0.9) 100%);
+            transform: translateX(5px);
+        }
+
+        .team-control label {
+            flex: 1;
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 1.2em;
+            letter-spacing: 1px;
+        }
+
+        .team-control input {
+            width: 110px;
+            padding: 12px;
+            border: 2px solid #d4af37;
+            background: rgba(10, 10, 20, 0.8);
+            color: #ffd700;
+            border-radius: 8px;
+            font-size: 1.3em;
+            text-align: center;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .team-control input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 
+                0 0 20px rgba(212, 175, 55, 0.4),
+                inset 0 2px 5px rgba(0, 0, 0, 0.3);
+            background: rgba(15, 15, 25, 0.9);
+        }
+
+        .team-control button {
+            padding: 12px 28px;
+            font-size: 1em;
+            font-weight: 700;
+        }
+
+        button {
+            background: linear-gradient(135deg, #ffd700 0%, #d4af37 50%, #ffd700 100%);
+            background-size: 200% auto;
+            color: #1a1a1a;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 10px;
+            font-size: 1.05em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+            background-position: 100% 0;
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        .last-updated {
+            text-align: center;
+            margin-top: 35px;
+            color: #999;
+            font-size: 1em;
+            font-style: italic;
+            font-weight: 500;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .event-branding {
+            text-align: center;
+            margin-top: 45px;
+            padding-top: 35px;
+            border-top: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .event-branding h3 {
+            color: #ffd700;
+            font-size: 1.5em;
+            margin-bottom: 8px;
+            font-style: italic;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .event-branding p {
+            color: #999;
+            font-size: 1.05em;
+            font-weight: 500;
+        }
+
+        @media (max-width: 1024px) {
+            .round-headers {
+                display: none;
+            }
+
+            .team-score {
+                grid-template-columns: auto 1fr auto;
+                gap: 20px;
+            }
+
+            .round-score {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .scoreboard-container {
+                padding: 30px 25px;
+            }
+            .scoreboard-title {
+                font-size: 2.2em;
+            }
+            .trophy-icon {
+                font-size: 3em;
+            }
+            .team-name {
+                font-size: 1.1em;
+            }
+            .team-total {
+                font-size: 1.8em;
+            }
+            .rank-1 .team-total {
+                font-size: 2.3em;
+            }
+            .team-rank {
+                font-size: 1.5em;
+            }
+            .team-control {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scoreboard-container">
+        <div class="setup-notice" id="setupNotice">
+            <h3>⚠️ Setup Required</h3>
+            <p><strong>This file needs to be hosted online to work with Firebase.</strong></p>
+            <p><strong>Quick Setup Steps:</strong></p>
+            <p>1. Save this HTML file to your computer</p>
+            <p>2. Upload to <strong>Netlify Drop</strong> (app.netlify.com/drop)</p>
+            <p>3. Share the URL or create a QR code</p>
+            <p>4. Host password: <code>music2024</code></p>
+        </div>
+
+        <div class="host-mode-toggle">
+            <label>
+                <input type="checkbox" id="hostModeCheckbox" onchange="toggleHostMode()">
+                🎮 Host Mode
+            </label>
+        </div>
+
+        <div class="scoreboard-header">
+            <div class="trophy-icon">🏆</div>
+            <h1 class="scoreboard-title">LIVE SCOREBOARD</h1>
+            <p class="scoreboard-subtitle">Current Standings</p>
+            <div class="round-indicator" id="roundIndicator">
+                <div class="round-badge" data-round="1">Round 1</div>
+                <div class="round-badge" data-round="2">Round 2</div>
+                <div class="round-badge" data-round="3">Round 3</div>
+                <div class="round-badge" data-round="4">Round 4</div>
+            </div>
+        </div>
+
+        <div class="scoreboard-wrapper">
+            <div class="round-headers">
+                <span class="header-rank">#</span>
+                <span class="header-name">Team</span>
+                <span class="header-round">R1</span>
+                <span class="header-round">R2</span>
+                <span class="header-round">R3</span>
+                <span class="header-round">R4</span>
+                <span class="header-total">Total</span>
+            </div>
+            
+            <div class="scoreboard" id="scoreboard">
+                <!-- Scores will load here -->
+            </div>
+        </div>
+
+        <div class="score-controls" id="scoreControls" style="display: none;">
+            <h3>🎮 Update Scores</h3>
+            
+            <div class="round-selector" id="roundSelector">
+                <button onclick="selectRound(1)" class="active" data-round="1">Round 1</button>
+                <button onclick="selectRound(2)" data-round="2">Round 2</button>
+                <button onclick="selectRound(3)" data-round="3">Round 3</button>
+                <button onclick="selectRound(4)" data-round="4">Round 4</button>
+            </div>
+
+            <div id="teamControls">
+                <!-- Controls will be generated here -->
+            </div>
+        </div>
+
+        <div class="last-updated" id="lastUpdated">
+            Loading...
+        </div>
+
+        <div class="event-branding">
+            <h3>Keep Our Mum Jumping</h3>
+            <p>Tewinbury Farm, Tythe Barn</p>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        let isHostAuthenticated = false;
+        let currentRound = 1;
+        const HOST_PASSWORD = 'music2024';
+
+        function toggleHostMode() {
+            console.log('Toggle host mode called');
+            const checkbox = document.getElementById('hostModeCheckbox');
+            console.log('Checkbox checked:', checkbox.checked);
+            
+            if (checkbox.checked) {
+                if (!isHostAuthenticated) {
+                    const password = prompt('Enter host password:');
+                    console.log('Password entered:', password ? 'yes' : 'no');
+                    
+                    if (password === HOST_PASSWORD) {
+                        console.log('Password correct!');
+                        isHostAuthenticated = true;
+                        document.getElementById('scoreControls').style.display = 'block';
+                        alert('Host mode activated! You can now update scores.');
+                    } else {
+                        console.log('Password incorrect');
+                        alert('Incorrect password! The password is: music2024');
+                        checkbox.checked = false;
+                        return;
+                    }
+                } else {
+                    console.log('Already authenticated');
+                    document.getElementById('scoreControls').style.display = 'block';
+                }
+            } else {
+                console.log('Host mode disabled');
+                document.getElementById('scoreControls').style.display = 'none';
+            }
+        }
+
+        function selectRound(round) {
+            currentRound = round;
+            document.querySelectorAll('.round-selector button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.round-selector button[data-round="${round}"]`).classList.add('active');
+        }
+
+        // Check if Firebase is available
+        if (typeof firebase !== 'undefined') {
+            // Firebase Configuration
+            const firebaseConfig = {
+                apiKey: "AIzaSyBxqBlBPtIICb4CrAqqyZGNL7YHEW9IEJ4",
+                authDomain: "music-and-minds-quiz.firebaseapp.com",
+                projectId: "music-and-minds-quiz",
+                storageBucket: "music-and-minds-quiz.firebasestorage.app",
+                messagingSenderId: "885198457091",
+                appId: "1:885198457091:web:7847a2289d5038fdf6c136"
+            };
+
+            const app = firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+
+            const teamNames = ["Team Alpha", "Team Bravo", "Team Charlie", "Team Delta", "Team Echo"];
+
+            async function initializeTeams() {
+                const teamsRef = db.collection('quiz').doc('teams');
+                const teamsDoc = await teamsRef.get();
+                
+                if (!teamsDoc.exists) {
+                    const initialTeams = {
+                        currentRound: 3  // Demo: currently on round 3
+                    };
+                    
+                    // Demo data with scores for multiple rounds
+                    const demoData = [
+                        { name: "Team Alpha", rounds: [8, 7, 0, 0] },      // Total: 15
+                        { name: "Team Bravo", rounds: [6, 9, 0, 0] },      // Total: 15
+                        { name: "Team Charlie", rounds: [7, 6, 0, 0] },    // Total: 13
+                        { name: "Team Delta", rounds: [5, 7, 0, 0] },      // Total: 12
+                        { name: "Team Echo", rounds: [6, 5, 0, 0] }        // Total: 11
+                    ];
+                    
+                    teamNames.forEach((name, index) => {
+                        const data = demoData[index];
+                        initialTeams[`team${index}`] = { 
+                            name: name,
+                            rounds: data.rounds,
+                            total: data.rounds.reduce((sum, score) => sum + score, 0)
+                        };
+                    });
+                    await teamsRef.set(initialTeams);
+                }
+            }
+
+            function setupRealtimeListener() {
+                const teamsRef = db.collection('quiz').doc('teams');
+                teamsRef.onSnapshot((doc) => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        updateScoreboardDisplay(data);
+                        updateRoundIndicator(data.currentRound || 1);
+                        updateLastUpdated();
+                    }
+                });
+            }
+
+            function updateRoundIndicator(activeRound) {
+                document.querySelectorAll('.round-badge').forEach(badge => {
+                    const round = parseInt(badge.dataset.round);
+                    badge.classList.remove('active', 'completed');
+                    
+                    if (round === activeRound) {
+                        badge.classList.add('active');
+                    } else if (round < activeRound) {
+                        badge.classList.add('completed');
+                    }
+                });
+            }
+
+            function updateScoreboardDisplay(teamsData) {
+                const { currentRound: round, ...teams } = teamsData;
+                
+                const teamsArray = Object.entries(teams).map(([key, value]) => ({
+                    key: key,
+                    ...value
+                })).sort((a, b) => b.total - a.total);
+                
+                const scoreboardDiv = document.getElementById('scoreboard');
+                
+                scoreboardDiv.innerHTML = teamsArray.map((team, index) => {
+                    let rankClass = '', rankEmoji = '';
+                    if (index === 0 && team.total > 0) { 
+                        rankClass = 'rank-1'; 
+                        rankEmoji = '👑'; 
+                    } else if (index === 1 && team.total > 0) { 
+                        rankClass = 'rank-2'; 
+                        rankEmoji = '🥈'; 
+                    } else if (index === 2 && team.total > 0) { 
+                        rankClass = 'rank-3'; 
+                        rankEmoji = '🥉'; 
+                    } else {
+                        rankEmoji = index + 1;
+                    }
+                    
+                    return `
+                        <div class="team-score ${rankClass}">
+                            <span class="team-rank">${rankEmoji}</span>
+                            <span class="team-name">${team.name}</span>
+                            <span class="round-score ${team.rounds[0] > 0 ? 'has-score' : ''}">${team.rounds[0]}</span>
+                            <span class="round-score ${team.rounds[1] > 0 ? 'has-score' : ''}">${team.rounds[1]}</span>
+                            <span class="round-score ${team.rounds[2] > 0 ? 'has-score' : ''}">${team.rounds[2]}</span>
+                            <span class="round-score ${team.rounds[3] > 0 ? 'has-score' : ''}">${team.rounds[3]}</span>
+                            <span class="team-total">${team.total}</span>
+                        </div>
+                    `;
+                }).join('');
+
+                if (isHostAuthenticated) {
+                    updateControlsDisplay(teamsData);
+                }
+            }
+
+            function updateControlsDisplay(teamsData) {
+                const { currentRound: round, ...teams } = teamsData;
+                const teamsArray = Object.entries(teams).map(([key, value]) => ({
+                    key: key,
+                    ...value
+                }));
+
+                const controlsDiv = document.getElementById('teamControls');
+                controlsDiv.innerHTML = teamsArray.map(team => `
+                    <div class="team-control">
+                        <label>${team.name}:</label>
+                        <input type="number" id="score-${team.key}" value="${team.rounds[currentRound - 1]}" min="0">
+                        <button onclick="updateTeamScore('${team.key}')">Update</button>
+                    </div>
+                `).join('');
+            }
+
+            async function updateTeamScore(teamKey) {
+                const input = document.getElementById(`score-${teamKey}`);
+                const newScore = parseInt(input.value) || 0;
+                
+                try {
+                    const teamsRef = db.collection('quiz').doc('teams');
+                    const doc = await teamsRef.get();
+                    const data = doc.data();
+                    
+                    const team = data[teamKey];
+                    team.rounds[currentRound - 1] = newScore;
+                    team.total = team.rounds.reduce((sum, score) => sum + score, 0);
+                    
+                    await teamsRef.update({
+                        [teamKey]: team,
+                        currentRound: currentRound
+                    });
+                } catch (error) {
+                    console.error('Error updating score:', error);
+                    alert('Error updating score. Please try again.');
+                }
+            }
+
+            window.updateTeamScore = updateTeamScore;
+
+            function updateLastUpdated() {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('en-GB', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+                document.getElementById('lastUpdated').textContent = `Last updated: ${timeString}`;
+            }
+
+            document.getElementById('setupNotice').style.display = 'none';
+            initializeTeams().then(() => {
+                setupRealtimeListener();
+                updateLastUpdated();
+            });
+
+        } else {
+            // Firebase not loaded (artifact viewer) - show demo data
+            document.getElementById('lastUpdated').textContent = '(Demo Mode - Download and host this file to enable live sync)';
+            
+            // Display demo scoreboard
+            const demoTeams = [
+                { name: "Team Alpha", rounds: [8, 7, 0, 0], total: 15 },
+                { name: "Team Bravo", rounds: [6, 9, 0, 0], total: 15 },
+                { name: "Team Charlie", rounds: [7, 6, 0, 0], total: 13 },
+                { name: "Team Delta", rounds: [5, 7, 0, 0], total: 12 },
+                { name: "Team Echo", rounds: [6, 5, 0, 0], total: 11 }
+            ];
+            
+            const scoreboardDiv = document.getElementById('scoreboard');
+            scoreboardDiv.innerHTML = demoTeams.map((team, index) => {
+                let rankClass = '', rankEmoji = '';
+                if (index === 0) { 
+                    rankClass = 'rank-1'; 
+                    rankEmoji = '👑'; 
+                } else if (index === 1) { 
+                    rankClass = 'rank-2'; 
+                    rankEmoji = '🥈'; 
+                } else if (index === 2) { 
+                    rankClass = 'rank-3'; 
+                    rankEmoji = '🥉'; 
+                } else {
+                    rankEmoji = index + 1;
+                }
+                
+                return `
+                    <div class="team-score ${rankClass}">
+                        <span class="team-rank">${rankEmoji}</span>
+                        <span class="team-name">${team.name}</span>
+                        <span class="round-score ${team.rounds[0] > 0 ? 'has-score' : ''}">${team.rounds[0]}</span>
+                        <span class="round-score ${team.rounds[1] > 0 ? 'has-score' : ''}">${team.rounds[1]}</span>
+                        <span class="round-score ${team.rounds[2] > 0 ? 'has-score' : ''}">${team.rounds[2]}</span>
+                        <span class="round-score ${team.rounds[3] > 0 ? 'has-score' : ''}">${team.rounds[3]}</span>
+                        <span class="team-total">${team.total}</span>
+                    </div>
+                `;
+            }).join('');
+            
+            // Update round indicator for demo
+            document.querySelector('.round-badge[data-round="1"]').classList.add('completed');
+            document.querySelector('.round-badge[data-round="2"]').classList.add('completed');
+            document.querySelector('.round-badge[data-round="3"]').classList.add('active');
+        }
+    </script>
+</body>
+</html>
