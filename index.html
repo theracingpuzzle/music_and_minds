@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
     <title>Music and Minds - Live Scoreboard</title>
     <style>
         * {
@@ -348,6 +351,80 @@
             font-style: italic;
         }
 
+        .advertisement-section {
+            margin-top: 35px;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(156, 39, 176, 0.15) 0%, rgba(103, 58, 183, 0.15) 100%);
+            border: 2px solid rgba(156, 39, 176, 0.4);
+            border-radius: 15px;
+        }
+
+        .advertisement-section h3 {
+            text-align: center;
+            color: #d4af37;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .ad-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .ad-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .ad-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(156, 39, 176, 0.3);
+            border-color: rgba(156, 39, 176, 0.6);
+        }
+
+        .ad-link.gofundme:hover {
+            border-color: rgba(0, 210, 120, 0.6);
+            box-shadow: 0 5px 20px rgba(0, 210, 120, 0.3);
+        }
+
+        .ad-link.blog:hover {
+            border-color: rgba(156, 39, 176, 0.6);
+            box-shadow: 0 5px 20px rgba(156, 39, 176, 0.3);
+        }
+
+        .ad-icon {
+            font-size: 2em;
+        }
+
+        .ad-content {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .ad-content strong {
+            color: #ffffff;
+            font-size: 1.1em;
+            font-weight: 700;
+        }
+
+        .ad-content span {
+            color: #999;
+            font-size: 0.9em;
+        }
+
         .event-branding {
             text-align: center;
             margin-top: 35px;
@@ -368,87 +445,249 @@
         }
 
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
             .scoreboard-container {
-                padding: 25px 15px;
+                padding: 20px 12px;
+                border-radius: 20px;
+            }
+
+            .host-mode-toggle {
+                padding: 12px 18px;
+                margin-bottom: 20px;
+            }
+
+            .host-mode-toggle label {
+                font-size: 0.9em;
+                gap: 10px;
+            }
+
+            .host-mode-toggle input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+            }
+
+            .trophy-icon {
+                font-size: 2.5em;
+                margin-bottom: 15px;
             }
 
             .scoreboard-title {
-                font-size: 1.8em;
+                font-size: 1.6em;
+                letter-spacing: 2px;
+            }
+
+            .scoreboard-subtitle {
+                font-size: 0.9em;
+                letter-spacing: 1.5px;
             }
 
             .column-headers {
-                grid-template-columns: 50px 1fr 55px 55px 55px 55px 70px;
-                gap: 5px;
-                padding: 10px 12px;
+                grid-template-columns: 45px 1fr 50px 50px 50px 50px 65px;
+                gap: 4px;
+                padding: 8px 10px;
                 font-size: 0.7em;
+                margin-bottom: 8px;
             }
 
             .team-row {
-                grid-template-columns: 50px 1fr 55px 55px 55px 55px 70px;
-                gap: 5px;
-                padding: 12px;
+                grid-template-columns: 45px 1fr 50px 50px 50px 50px 65px;
+                gap: 4px;
+                padding: 12px 10px;
+                border-radius: 12px;
             }
 
             .team-rank {
-                font-size: 1.4em;
+                font-size: 1.3em;
             }
 
             .rank-1 .team-rank {
-                font-size: 1.8em;
+                font-size: 1.7em;
             }
 
-            .team-name-display,
-            .team-name-input {
-                font-size: 1em;
-            }
-
-            .score-display,
-            .score-input {
-                font-size: 1em;
-                width: 50px;
-            }
-
-            .team-total {
+            .rank-2 .team-rank,
+            .rank-3 .team-rank {
                 font-size: 1.5em;
             }
 
+            .team-name-display {
+                font-size: 0.95em;
+                letter-spacing: 0.5px;
+            }
+
+            .team-name-input {
+                font-size: 0.95em;
+                padding: 8px 10px;
+            }
+
+            .score-display {
+                font-size: 1em;
+            }
+
+            .score-input {
+                font-size: 1em;
+                width: 48px;
+                padding: 8px 4px;
+            }
+
+            .team-total {
+                font-size: 1.4em;
+            }
+
             .rank-1 .team-total {
-                font-size: 1.8em;
+                font-size: 1.7em;
+            }
+
+            .host-hint {
+                font-size: 0.95em;
+                padding: 12px;
+                margin-top: 15px;
             }
 
             .host-controls {
                 flex-direction: column;
+                margin-top: 15px;
             }
 
             .add-team-btn,
             .reset-scores-btn {
                 width: 100%;
-                padding: 12px 20px;
+                padding: 14px 20px;
+                font-size: 0.95em;
+            }
+
+            .advertisement-section {
+                padding: 20px 15px;
+                margin-top: 25px;
+            }
+
+            .advertisement-section h3 {
+                font-size: 1.2em;
+                margin-bottom: 15px;
+            }
+
+            .ad-links {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .ad-link {
+                min-width: 100%;
+                padding: 14px 16px;
+            }
+
+            .ad-icon {
+                font-size: 1.8em;
+            }
+
+            .ad-content strong {
                 font-size: 1em;
+            }
+
+            .ad-content span {
+                font-size: 0.85em;
+            }
+
+            .event-branding {
+                margin-top: 25px;
+                padding-top: 20px;
+            }
+
+            .event-branding h3 {
+                font-size: 1.1em;
+            }
+
+            .event-branding p {
+                font-size: 0.9em;
             }
         }
 
         @media (max-width: 480px) {
+            .scoreboard-container {
+                padding: 18px 10px;
+            }
+
+            .scoreboard-title {
+                font-size: 1.4em;
+                letter-spacing: 1.5px;
+            }
+
             .column-headers {
+                grid-template-columns: 40px 1fr 48px 48px 48px 48px 60px;
                 font-size: 0.65em;
                 gap: 3px;
-                padding: 8px 10px;
+                padding: 6px 8px;
             }
 
             .team-row {
+                grid-template-columns: 40px 1fr 48px 48px 48px 48px 60px;
                 gap: 3px;
-                padding: 10px;
+                padding: 10px 8px;
             }
 
             .team-name-display,
             .team-name-input {
-                font-size: 0.9em;
+                font-size: 0.85em;
             }
 
             .score-display,
             .score-input {
-                font-size: 0.9em;
-                width: 45px;
+                font-size: 0.95em;
+                width: 46px;
+            }
+
+            .team-total {
+                font-size: 1.3em;
+            }
+
+            .rank-1 .team-total {
+                font-size: 1.5em;
+            }
+        }
+
+        /* iPhone specific optimizations */
+        @media only screen 
+        and (min-device-width: 375px) 
+        and (max-device-width: 430px) 
+        and (-webkit-min-device-pixel-ratio: 2) {
+            
+            /* Prevent zoom on input focus */
+            input {
+                font-size: 16px !important;
+            }
+
+            .team-name-input {
+                font-size: 16px !important;
+                padding: 10px 12px;
+            }
+
+            .score-input {
+                font-size: 16px !important;
+                width: 50px;
+                padding: 10px 5px;
+            }
+
+            /* Better touch targets */
+            .team-row {
+                padding: 14px 10px;
+            }
+
+            .add-team-btn,
+            .reset-scores-btn {
+                padding: 16px 20px;
+                font-size: 16px !important;
+            }
+
+            .host-mode-toggle input[type="checkbox"] {
+                width: 24px;
+                height: 24px;
+            }
+
+            /* Larger tap areas for links */
+            .ad-link {
+                padding: 16px 18px;
             }
         }
     </style>
@@ -493,6 +732,26 @@
 
         <div class="last-updated" id="lastUpdated">
             Loading...
+        </div>
+
+        <div class="advertisement-section">
+            <h3>🎉 Support Our Cause</h3>
+            <div class="ad-links">
+                <a href="https://www.gofundme.com/f/keep-our-mum-jumping" target="_blank" class="ad-link gofundme">
+                    <span class="ad-icon">💝</span>
+                    <div class="ad-content">
+                        <strong>Donate Now</strong>
+                        <span>Help Keep Our Mum Jumping</span>
+                    </div>
+                </a>
+                <a href="https://purplesams.wordpress.com/" target="_blank" class="ad-link blog">
+                    <span class="ad-icon">📝</span>
+                    <div class="ad-content">
+                        <strong>Purple Sam's Blog</strong>
+                        <span>Read Sam's Story</span>
+                    </div>
+                </a>
+            </div>
         </div>
 
         <div class="event-branding">
