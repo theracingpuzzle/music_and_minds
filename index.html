@@ -213,7 +213,7 @@
 
         .column-headers {
             display: grid;
-            grid-template-columns: 60px 1fr 70px 70px 70px 70px 70px 70px 70px 90px;
+            grid-template-columns: 60px 1fr 70px 70px 70px 70px 70px 70px 90px;
             gap: 10px;
             padding: 12px 20px;
             margin-bottom: 10px;
@@ -243,7 +243,7 @@
 
         .team-row {
             display: grid;
-            grid-template-columns: 60px 1fr 70px 70px 70px 70px 70px 70px 70px 90px;
+            grid-template-columns: 60px 1fr 70px 70px 70px 70px 70px 70px 90px;
             gap: 10px;
             align-items: center;
             background: linear-gradient(135deg, rgba(42, 42, 62, 0.6) 0%, rgba(26, 26, 46, 0.8) 100%);
@@ -1062,7 +1062,6 @@
             <div class="header-item">R3</div>
             <div class="header-item">R4</div>
             <div class="header-item">R5</div>
-            <div class="header-item">R6</div>
             <div class="header-item">Total</div>
         </div>
 
@@ -1228,8 +1227,8 @@
                     ? `<input type="text" class="team-name-input" value="${team.name}" data-team="${team.key}">`
                     : `<div class="team-name-display">${team.name}</div>`;
 
-                const scoresHTML = [0, 1, 2, 3, 4, 5, 6].map(roundIndex => {
-                    const score = team.rounds[roundIndex];
+                const scoresHTML = [0, 1, 2, 3, 4, 5].map(roundIndex => {
+                    const score = team.rounds && team.rounds[roundIndex] !== undefined ? team.rounds[roundIndex] : 0;
                     if (isHostMode) {
                         return `<input type="number" class="score-input" value="${score}" min="0" data-team="${team.key}" data-round="${roundIndex}">`;
                     } else {
@@ -1257,7 +1256,6 @@
                         <span class="mobile-round-label">R3</span>
                         <span class="mobile-round-label">R4</span>
                         <span class="mobile-round-label">R5</span>
-                        <span class="mobile-round-label">R6</span>
                     </div>
                     <span class="mobile-total-label">TOTAL</span>
                 </div>
@@ -1280,8 +1278,8 @@
                     ? `<input type="text" class="mobile-team-name-input" value="${team.name}" data-team="${team.key}">`
                     : `<div class="mobile-team-name-display">${team.name}</div>`;
 
-                const scoresHTML = [0, 1, 2, 3, 4, 5, 6].map(roundIndex => {
-                    const score = team.rounds[roundIndex];
+                const scoresHTML = [0, 1, 2, 3, 4, 5].map(roundIndex => {
+                    const score = team.rounds && team.rounds[roundIndex] !== undefined ? team.rounds[roundIndex] : 0;
                     if (isHostMode) {
                         return `<input type="number" class="mobile-score-input" value="${score}" min="0" data-team="${team.key}" data-round="${roundIndex}">`;
                     } else {
@@ -1432,7 +1430,7 @@
                 const newTeamKey = `team${teamIndex}`;
                 data[newTeamKey] = {
                     name: teamName.trim(),
-                    rounds: [0, 0, 0, 0, 0, 0, 0],
+                    rounds: [0, 0, 0, 0, 0, 0],
                     total: 0
                 };
 
@@ -1457,7 +1455,7 @@
                 // Reset all teams to 0
                 Object.keys(data).forEach(key => {
                     if (data[key].rounds) {
-                        data[key].rounds = [0, 0, 0, 0, 0, 0, 0];
+                        data[key].rounds = [0, 0, 0, 0, 0, 0];
                         data[key].total = 0;
                     }
                 });
