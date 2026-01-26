@@ -171,6 +171,71 @@
             flex-direction: column;
         }
 
+        /* Side-by-side layout for host mode */
+        .host-mode-layout {
+            display: none;
+        }
+
+        .host-mode-layout.active {
+            display: grid;
+            grid-template-columns: 1fr 450px;
+            gap: 30px;
+            margin-top: 20px;
+            align-items: start;
+        }
+
+        .scoreboard-column {
+            min-width: 0;
+        }
+
+        .quick-entry-column {
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            background: rgba(26, 10, 46, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            border: 2px solid rgba(232, 196, 240, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .quick-entry-column::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .quick-entry-column::-webkit-scrollbar-track {
+            background: rgba(232, 196, 240, 0.1);
+            border-radius: 4px;
+        }
+
+        .quick-entry-column::-webkit-scrollbar-thumb {
+            background: rgba(232, 196, 240, 0.3);
+            border-radius: 4px;
+        }
+
+        .quick-entry-column::-webkit-scrollbar-thumb:hover {
+            background: rgba(232, 196, 240, 0.5);
+        }
+
+        /* Hide panels when in side-by-side mode */
+        .host-mode-layout.active ~ .round-selector,
+        .host-mode-layout.active ~ .team-management-panel {
+            display: none;
+        }
+
+        /* Responsive: Stack on smaller screens */
+        @media (max-width: 1200px) {
+            .host-mode-layout.active {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-entry-column {
+                position: relative;
+                max-height: none;
+            }
+        }
+
         body.fullscreen-mode .scoreboard {
             flex: 1;
             overflow-y: auto;
@@ -740,6 +805,14 @@
             display: block;
         }
 
+        /* Sidebar version (compact) */
+        .round-selector-sidebar {
+            padding: 0;
+            background: none;
+            border: none;
+            margin: 0;
+        }
+
         .round-selector-header {
             text-align: center;
             margin-bottom: 15px;
@@ -747,33 +820,35 @@
 
         .round-selector-header h3 {
             color: #e8c4f0;
-            font-size: 1.2em;
-            margin-bottom: 5px;
+            font-size: 1.3em;
+            margin-bottom: 8px;
+            font-weight: 800;
         }
 
         .round-selector-header p {
             color: #999;
-            font-size: 0.9em;
+            font-size: 0.85em;
+            line-height: 1.4;
         }
 
         .round-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
             margin-bottom: 20px;
         }
 
         .round-btn {
-            padding: 12px 24px;
+            padding: 12px 16px;
             background: rgba(232, 196, 240, 0.1);
             border: 2px solid rgba(232, 196, 240, 0.3);
             color: #e8c4f0;
             border-radius: 10px;
             cursor: pointer;
             font-weight: 700;
-            font-size: 1em;
+            font-size: 0.95em;
             transition: all 0.3s ease;
+            text-align: center;
         }
 
         .round-btn:hover {
@@ -790,37 +865,60 @@
         }
 
         .quick-entry-panel {
-            background: rgba(26, 10, 46, 0.8);
+            background: rgba(26, 10, 46, 0.4);
             border-radius: 10px;
             padding: 15px;
+            margin-bottom: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .quick-entry-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .quick-entry-panel::-webkit-scrollbar-track {
+            background: rgba(232, 196, 240, 0.1);
+            border-radius: 3px;
+        }
+
+        .quick-entry-panel::-webkit-scrollbar-thumb {
+            background: rgba(232, 196, 240, 0.3);
+            border-radius: 3px;
         }
 
         .quick-entry-team {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            flex-direction: column;
+            gap: 8px;
             margin-bottom: 12px;
-            padding: 10px;
+            padding: 12px;
             background: rgba(232, 196, 240, 0.05);
             border-radius: 8px;
             border: 1px solid rgba(232, 196, 240, 0.1);
         }
 
         .quick-entry-team-name {
-            flex: 1;
             color: #fff;
             font-weight: 700;
-            font-size: 1em;
+            font-size: 0.95em;
+            margin-bottom: 4px;
+        }
+
+        .quick-entry-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .quick-entry-input {
-            width: 80px;
-            padding: 8px 12px;
+            width: 70px;
+            padding: 8px 10px;
             background: rgba(232, 196, 240, 0.1);
             border: 2px solid rgba(232, 196, 240, 0.3);
             border-radius: 8px;
             color: #e8c4f0;
-            font-size: 1.1em;
+            font-size: 1.2em;
             font-weight: 700;
             text-align: center;
             font-family: 'Courier New', monospace;
@@ -835,11 +933,13 @@
 
         .quick-score-buttons {
             display: flex;
-            gap: 5px;
+            gap: 4px;
+            flex: 1;
         }
 
         .quick-score-btn {
-            padding: 6px 12px;
+            flex: 1;
+            padding: 8px 10px;
             background: rgba(76, 175, 80, 0.2);
             border: 1px solid rgba(76, 175, 80, 0.4);
             color: #4caf50;
@@ -1345,22 +1445,71 @@
             <div class="header-item">Total</div>
         </div>
 
-        <div class="scoreboard" id="scoreboard">
-            <!-- Teams will be loaded here -->
+        <!-- Host Mode: Side-by-Side Layout -->
+        <div class="host-mode-layout" id="hostModeLayout">
+            <!-- Left: Scoreboard -->
+            <div class="scoreboard-column">
+                <div class="scoreboard" id="scoreboard">
+                    <!-- Teams will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Right: Quick Entry Panel -->
+            <div class="quick-entry-column">
+                <div class="round-selector-header">
+                    <h3>⚡ Quick Entry</h3>
+                    <p>Select round, enter scores, save!</p>
+                </div>
+                
+                <div class="round-buttons">
+                    <button class="round-btn" onclick="selectRound(0)">TR</button>
+                    <button class="round-btn" onclick="selectRound(1)">R1</button>
+                    <button class="round-btn" onclick="selectRound(2)">R2</button>
+                    <button class="round-btn" onclick="selectRound(3)">R3</button>
+                    <button class="round-btn" onclick="selectRound(4)">R4</button>
+                    <button class="round-btn" onclick="selectRound(5)">R5</button>
+                </div>
+
+                <div class="quick-entry-panel" id="quickEntryPanel">
+                    <p style="text-align:center; color:#999; padding:20px; font-size:0.9em;">
+                        👆 Select a round above to start
+                    </p>
+                </div>
+
+                <button class="save-round-btn" id="saveRoundBtn" onclick="saveRoundScores()" disabled>
+                    💾 Save Round
+                </button>
+
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(232, 196, 240, 0.2);">
+                    <div class="round-selector-header">
+                        <h3 style="font-size:1.1em;">👥 Manage</h3>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <button class="add-team-btn" onclick="addNewTeam()" style="width:100%; padding:12px;">+ Add Team</button>
+                        <button class="undo-btn" id="undoBtn" onclick="undoLastChange()" disabled style="width:100%; padding:12px;">↶ Undo</button>
+                    </div>
+                    <div id="teamListContainer" style="margin-top:15px; max-height:200px; overflow-y:auto;">
+                        <!-- Team list -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Guest Mode: Normal Scoreboard -->
+        <div class="scoreboard" id="scoreboardGuest" style="display:none;">
+            <!-- Teams will be loaded here for guests -->
         </div>
 
         <div class="host-hint" id="hostHint">
-            ✏️ Host Mode Active - Click any name or score to edit!
+            ✏️ Host Mode Active - Use Quick Entry panel on the right! →
         </div>
 
         <div class="host-controls" id="hostControls">
-            <button class="add-team-btn" onclick="addNewTeam()">+ Add New Team</button>
             <button class="reset-scores-btn" onclick="resetAllScores()">Reset All Scores</button>
-            <button class="undo-btn" id="undoBtn" onclick="undoLastChange()" disabled>↶ Undo</button>
         </div>
 
-        <!-- Enhanced Round Selector -->
-        <div class="round-selector" id="roundSelector">
+        <!-- Hidden panels (for mobile fallback) -->
+        <div class="round-selector" id="roundSelector" style="display:none;">
             <div class="round-selector-header">
                 <h3>📝 Quick Score Entry</h3>
                 <p>Select a round and enter all team scores at once</p>
@@ -1446,9 +1595,9 @@
                     isHostMode = true;
                     document.getElementById('hostHint').classList.add('active');
                     document.getElementById('hostControls').classList.add('active');
-                    document.getElementById('roundSelector').classList.add('active');
-                    document.getElementById('teamManagementPanel').classList.add('active');
-                    showToast('✅ Host mode activated!');
+                    document.getElementById('hostModeLayout').classList.add('active');
+                    document.getElementById('scoreboardGuest').style.display = 'none';
+                    showToast('✅ Host mode activated! Use the panel on the right →');
                     // Re-render to show input fields
                     if (db) {
                         db.collection('quiz').doc('teams').get().then((doc) => {
@@ -1467,12 +1616,12 @@
                 isHostMode = false;
                 document.getElementById('hostHint').classList.remove('active');
                 document.getElementById('hostControls').classList.remove('active');
-                document.getElementById('roundSelector').classList.remove('active');
-                document.getElementById('teamManagementPanel').classList.remove('active');
+                document.getElementById('hostModeLayout').classList.remove('active');
+                document.getElementById('scoreboardGuest').style.display = 'flex';
                 // Re-render to show display fields
                 if (db) {
                     db.collection('quiz').doc('teams').get().then((doc) => {
-                        if (doc.exists) renderScoreboard(doc.data());
+                        if (doc.exists) renderScoreboardGuest(doc.data());
                     });
                 }
             }
@@ -1498,7 +1647,13 @@
             // Listen for changes
             db.collection('quiz').doc('teams').onSnapshot((doc) => {
                 if (doc.exists) {
-                    renderScoreboard(doc.data());
+                    if (isHostMode) {
+                        renderScoreboard(doc.data());
+                        renderQuickEntry(doc.data());
+                        renderTeamManagement(doc.data());
+                    } else {
+                        renderScoreboardGuest(doc.data());
+                    }
                     updateLastUpdated();
                 }
             });
@@ -1668,6 +1823,109 @@
                     });
                 });
             }
+        }
+
+        function renderScoreboardGuest(data) {
+            if (!data) return;
+
+            const teams = Object.entries(data)
+                .filter(([key]) => key.startsWith('team'))
+                .map(([key, value]) => ({ key, ...value }))
+                .sort((a, b) => b.total - a.total);
+
+            const scoreboardDiv = document.getElementById('scoreboardGuest');
+            
+            if (teams.length === 0) {
+                scoreboardDiv.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #999;">
+                        <p style="font-size: 1.2em; margin-bottom: 10px;">No teams yet!</p>
+                        <p style="font-size: 1em;">The host will add teams soon.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Desktop layout (view only)
+            const desktopHTML = teams.map((team, index) => {
+                let rankClass = '';
+                let rankEmoji = index + 1;
+                
+                if (index === 0 && team.total > 0) { 
+                    rankClass = 'rank-1'; 
+                    rankEmoji = '👑'; 
+                } else if (index === 1 && team.total > 0) { 
+                    rankClass = 'rank-2'; 
+                    rankEmoji = '🥈'; 
+                } else if (index === 2 && team.total > 0) { 
+                    rankClass = 'rank-3'; 
+                    rankEmoji = '🥉'; 
+                }
+
+                const scoresHTML = [0, 1, 2, 3, 4, 5].map(roundIndex => {
+                    const score = team.rounds[roundIndex];
+                    return `<div class="score-display">${score}</div>`;
+                }).join('');
+
+                return `
+                    <div class="team-row ${rankClass}">
+                        <div class="team-rank">${rankEmoji}</div>
+                        <div class="team-name-display">${team.name}</div>
+                        ${scoresHTML}
+                        <div class="team-total">${team.total}</div>
+                    </div>
+                `;
+            }).join('');
+
+            // Mobile layout
+            const mobileHTML = `
+                <div class="mobile-round-labels-wrapper">
+                    <div class="mobile-round-labels">
+                        <span class="mobile-round-label">TR</span>
+                        <span class="mobile-round-label">R1</span>
+                        <span class="mobile-round-label">R2</span>
+                        <span class="mobile-round-label">R3</span>
+                        <span class="mobile-round-label">R4</span>
+                        <span class="mobile-round-label">R5</span>
+                    </div>
+                    <span class="mobile-total-label">TOTAL</span>
+                </div>
+            ` + teams.map((team, index) => {
+                let rankClass = '';
+                let rankEmoji = index + 1;
+                
+                if (index === 0 && team.total > 0) { 
+                    rankClass = 'rank-1'; 
+                    rankEmoji = '👑'; 
+                } else if (index === 1 && team.total > 0) { 
+                    rankClass = 'rank-2'; 
+                    rankEmoji = '🥈'; 
+                } else if (index === 2 && team.total > 0) { 
+                    rankClass = 'rank-3'; 
+                    rankEmoji = '🥉'; 
+                }
+
+                const scoresHTML = [0, 1, 2, 3, 4, 5].map(roundIndex => {
+                    const score = team.rounds[roundIndex];
+                    return `<div class="mobile-score-display">${score}</div>`;
+                }).join('');
+
+                return `
+                    <div class="mobile-team-wrapper ${rankClass}">
+                        <div class="mobile-team-header">
+                            <div class="mobile-team-rank">${rankEmoji}</div>
+                            <div class="mobile-team-name-display">${team.name}</div>
+                        </div>
+                        <div class="mobile-scores-row">
+                            <div class="mobile-scrollable">
+                                ${scoresHTML}
+                            </div>
+                            <div class="mobile-team-total">${team.total}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            scoreboardDiv.innerHTML = desktopHTML + mobileHTML;
         }
 
         async function handleTeamNameChange(e) {
@@ -1858,19 +2116,21 @@
                 return `
                     <div class="quick-entry-team">
                         <div class="quick-entry-team-name">${team.name}</div>
-                        <div class="quick-score-buttons">
-                            <button class="quick-score-btn" onclick="quickAddScore('${team.key}', 1)">+1</button>
-                            <button class="quick-score-btn" onclick="quickAddScore('${team.key}', 5)">+5</button>
-                            <button class="quick-score-btn" onclick="quickAddScore('${team.key}', 10)">+10</button>
+                        <div class="quick-entry-controls">
+                            <input 
+                                type="number" 
+                                class="quick-entry-input" 
+                                value="${currentScore}" 
+                                min="0"
+                                data-team="${team.key}"
+                                onchange="updateQuickEntry('${team.key}', this.value)"
+                            >
+                            <div class="quick-score-buttons">
+                                <button class="quick-score-btn" onclick="quickAddScore('${team.key}', 1)">+1</button>
+                                <button class="quick-score-btn" onclick="quickAddScore('${team.key}', 5)">+5</button>
+                                <button class="quick-score-btn" onclick="quickAddScore('${team.key}', 10)">+10</button>
+                            </div>
                         </div>
-                        <input 
-                            type="number" 
-                            class="quick-entry-input" 
-                            value="${currentScore}" 
-                            min="0"
-                            data-team="${team.key}"
-                            onchange="updateQuickEntry('${team.key}', this.value)"
-                        >
                     </div>
                 `;
             }).join('');
