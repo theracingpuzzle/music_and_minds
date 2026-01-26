@@ -171,33 +171,114 @@
             flex-direction: column;
         }
 
+        /* Hide guest container when host mode active */
+        #guestModeContainer {
+            display: block;
+        }
+
+        #guestModeContainer.hidden {
+            display: none;
+        }
+
         /* Side-by-side layout for host mode */
         .host-mode-layout {
             display: none;
+            grid-template-columns: 55% 43%;
+            gap: 2%;
+            margin-top: 20px;
         }
 
         .host-mode-layout.active {
             display: grid;
-            grid-template-columns: 1fr 450px;
-            gap: 30px;
-            margin-top: 20px;
-            align-items: start;
         }
 
         .scoreboard-column {
-            min-width: 0;
+            overflow-x: auto;
+        }
+
+        /* Shrink everything in the left column */
+        .host-mode-layout .scoreboard-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .host-mode-layout .trophy-icon {
+            font-size: 2em;
+            margin-bottom: 8px;
+        }
+
+        .host-mode-layout .scoreboard-title {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+        }
+
+        .host-mode-layout .scoreboard-subtitle {
+            font-size: 0.7em;
+        }
+
+        .host-mode-layout .column-headers {
+            grid-template-columns: 40px 1fr 45px 45px 45px 45px 45px 45px 60px;
+            gap: 6px;
+            padding: 8px 10px;
+            font-size: 0.7em;
+            margin-bottom: 8px;
+        }
+
+        .host-mode-layout .team-row {
+            grid-template-columns: 40px 1fr 45px 45px 45px 45px 45px 45px 60px;
+            gap: 6px;
+            padding: 10px;
+            min-height: 45px;
+        }
+
+        .host-mode-layout .team-rank {
+            font-size: 1.1em;
+        }
+
+        .host-mode-layout .rank-1 .team-rank {
+            font-size: 1.3em;
+        }
+
+        .host-mode-layout .team-name-display {
+            font-size: 0.85em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .host-mode-layout .score-display {
+            font-size: 0.85em;
+            padding: 6px;
+        }
+
+        .host-mode-layout .team-total {
+            font-size: 1.1em;
+        }
+
+        .host-mode-layout .rank-1 .team-total {
+            font-size: 1.3em;
+        }
+
+        /* Mobile view inside host mode scoreboard */
+        .host-mode-layout .mobile-team-wrapper {
+            display: none;
+        }
+
+        .host-mode-layout .mobile-round-labels-wrapper {
+            display: none;
         }
 
         .quick-entry-column {
-            position: sticky;
-            top: 20px;
-            max-height: calc(100vh - 40px);
-            overflow-y: auto;
             background: rgba(26, 10, 46, 0.95);
             border-radius: 20px;
-            padding: 25px;
+            padding: 20px;
             border: 2px solid rgba(232, 196, 240, 0.3);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+            position: sticky;
+            top: 20px;
         }
 
         .quick-entry-column::-webkit-scrollbar {
@@ -218,12 +299,6 @@
             background: rgba(232, 196, 240, 0.5);
         }
 
-        /* Hide panels when in side-by-side mode */
-        .host-mode-layout.active ~ .round-selector,
-        .host-mode-layout.active ~ .team-management-panel {
-            display: none;
-        }
-
         /* Responsive: Stack on smaller screens */
         @media (max-width: 1200px) {
             .host-mode-layout.active {
@@ -233,6 +308,19 @@
             .quick-entry-column {
                 position: relative;
                 max-height: none;
+                margin-top: 20px;
+            }
+
+            .host-mode-layout .scoreboard-title {
+                font-size: 1.6em;
+            }
+
+            .host-mode-layout .column-headers {
+                font-size: 0.75em;
+            }
+
+            .host-mode-layout .team-row {
+                font-size: 1em;
             }
         }
 
@@ -1427,34 +1515,59 @@
             <span class="fullscreen-icon">⛶</span>
         </button>
 
-        <div class="scoreboard-header">
-            <div class="trophy-icon">✨</div>
-            <h1 class="scoreboard-title">QUIZ FOR A CAUSE</h1>
-            <p class="scoreboard-subtitle">Live Scoreboard</p>
+        <!-- Guest Mode Container (Full Width) -->
+        <div id="guestModeContainer">
+            <div class="scoreboard-header">
+                <div class="trophy-icon">✨</div>
+                <h1 class="scoreboard-title">QUIZ FOR A CAUSE</h1>
+                <p class="scoreboard-subtitle">Live Scoreboard</p>
+            </div>
+
+            <div class="column-headers">
+                <div class="header-item">#</div>
+                <div class="header-team">Team</div>
+                <div class="header-item">TR</div>
+                <div class="header-item">R1</div>
+                <div class="header-item">R2</div>
+                <div class="header-item">R3</div>
+                <div class="header-item">R4</div>
+                <div class="header-item">R5</div>
+                <div class="header-item">Total</div>
+            </div>
+
+            <div id="scoreboardGuest">
+                <!-- Teams will be loaded here for guests -->
+            </div>
         </div>
 
-        <div class="column-headers">
-            <div class="header-item">#</div>
-            <div class="header-team">Team</div>
-            <div class="header-item">TR</div>
-            <div class="header-item">R1</div>
-            <div class="header-item">R2</div>
-            <div class="header-item">R3</div>
-            <div class="header-item">R4</div>
-            <div class="header-item">R5</div>
-            <div class="header-item">Total</div>
-        </div>
-
-        <!-- Host Mode: Side-by-Side Layout -->
+        <!-- Host Mode: Two Separate Tables Side-by-Side -->
         <div class="host-mode-layout" id="hostModeLayout">
-            <!-- Left: Scoreboard -->
+            <!-- LEFT: Scoreboard (Shrunk) -->
             <div class="scoreboard-column">
-                <div class="scoreboard" id="scoreboard">
-                    <!-- Teams will be loaded here -->
+                <div class="scoreboard-header">
+                    <div class="trophy-icon">✨</div>
+                    <h1 class="scoreboard-title">QUIZ FOR A CAUSE</h1>
+                    <p class="scoreboard-subtitle">Live Scoreboard</p>
+                </div>
+
+                <div class="column-headers">
+                    <div class="header-item">#</div>
+                    <div class="header-team">Team</div>
+                    <div class="header-item">TR</div>
+                    <div class="header-item">R1</div>
+                    <div class="header-item">R2</div>
+                    <div class="header-item">R3</div>
+                    <div class="header-item">R4</div>
+                    <div class="header-item">R5</div>
+                    <div class="header-item">Total</div>
+                </div>
+
+                <div id="scoreboard">
+                    <!-- Teams will be loaded here for host -->
                 </div>
             </div>
 
-            <!-- Right: Quick Entry Panel -->
+            <!-- RIGHT: Quick Entry Panel -->
             <div class="quick-entry-column">
                 <div class="round-selector-header">
                     <h3>⚡ Quick Entry</h3>
@@ -1495,11 +1608,6 @@
             </div>
         </div>
 
-        <!-- Guest Mode: Normal Scoreboard -->
-        <div class="scoreboard" id="scoreboardGuest" style="display:none;">
-            <!-- Teams will be loaded here for guests -->
-        </div>
-
         <div class="host-hint" id="hostHint">
             ✏️ Host Mode Active - Use Quick Entry panel on the right! →
         </div>
@@ -1508,7 +1616,7 @@
             <button class="reset-scores-btn" onclick="resetAllScores()">Reset All Scores</button>
         </div>
 
-        <!-- Hidden panels (for mobile fallback) -->
+        <!-- Hidden panels -->
         <div class="round-selector" id="roundSelector" style="display:none;">
             <div class="round-selector-header">
                 <h3>📝 Quick Score Entry</h3>
@@ -1593,10 +1701,12 @@
                 const password = prompt('Enter host password:');
                 if (password === HOST_PASSWORD) {
                     isHostMode = true;
+                    // Hide guest container
+                    document.getElementById('guestModeContainer').classList.add('hidden');
+                    // Show host layout
+                    document.getElementById('hostModeLayout').classList.add('active');
                     document.getElementById('hostHint').classList.add('active');
                     document.getElementById('hostControls').classList.add('active');
-                    document.getElementById('hostModeLayout').classList.add('active');
-                    document.getElementById('scoreboardGuest').style.display = 'none';
                     showToast('✅ Host mode activated! Use the panel on the right →');
                     // Re-render to show input fields
                     if (db) {
@@ -1614,10 +1724,12 @@
                 }
             } else {
                 isHostMode = false;
+                // Show guest container
+                document.getElementById('guestModeContainer').classList.remove('hidden');
+                // Hide host layout
+                document.getElementById('hostModeLayout').classList.remove('active');
                 document.getElementById('hostHint').classList.remove('active');
                 document.getElementById('hostControls').classList.remove('active');
-                document.getElementById('hostModeLayout').classList.remove('active');
-                document.getElementById('scoreboardGuest').style.display = 'flex';
                 // Re-render to show display fields
                 if (db) {
                     db.collection('quiz').doc('teams').get().then((doc) => {
