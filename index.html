@@ -726,6 +726,262 @@
             font-style: italic;
         }
 
+        /* Enhanced Host Mode Controls */
+        .round-selector {
+            display: none;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(45, 27, 78, 0.6);
+            border: 2px solid rgba(232, 196, 240, 0.3);
+            border-radius: 15px;
+        }
+
+        .round-selector.active {
+            display: block;
+        }
+
+        .round-selector-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .round-selector-header h3 {
+            color: #e8c4f0;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .round-selector-header p {
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .round-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .round-btn {
+            padding: 12px 24px;
+            background: rgba(232, 196, 240, 0.1);
+            border: 2px solid rgba(232, 196, 240, 0.3);
+            color: #e8c4f0;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .round-btn:hover {
+            background: rgba(232, 196, 240, 0.2);
+            border-color: rgba(232, 196, 240, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .round-btn.active {
+            background: linear-gradient(135deg, #e8c4f0 0%, #d4a0e8 100%);
+            color: #1a0a2e;
+            border-color: #e8c4f0;
+            box-shadow: 0 0 20px rgba(232, 196, 240, 0.4);
+        }
+
+        .quick-entry-panel {
+            background: rgba(26, 10, 46, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .quick-entry-team {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding: 10px;
+            background: rgba(232, 196, 240, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(232, 196, 240, 0.1);
+        }
+
+        .quick-entry-team-name {
+            flex: 1;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1em;
+        }
+
+        .quick-entry-input {
+            width: 80px;
+            padding: 8px 12px;
+            background: rgba(232, 196, 240, 0.1);
+            border: 2px solid rgba(232, 196, 240, 0.3);
+            border-radius: 8px;
+            color: #e8c4f0;
+            font-size: 1.1em;
+            font-weight: 700;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+
+        .quick-entry-input:focus {
+            outline: none;
+            background: rgba(232, 196, 240, 0.2);
+            border-color: #e8c4f0;
+            box-shadow: 0 0 15px rgba(232, 196, 240, 0.3);
+        }
+
+        .quick-score-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .quick-score-btn {
+            padding: 6px 12px;
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.4);
+            color: #4caf50;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.85em;
+            transition: all 0.2s ease;
+        }
+
+        .quick-score-btn:hover {
+            background: rgba(76, 175, 80, 0.3);
+            transform: scale(1.05);
+        }
+
+        .quick-score-btn:active {
+            transform: scale(0.95);
+        }
+
+        .save-round-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 15px;
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1em;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .save-round-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .save-round-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .undo-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #ff5722 0%, #e64a19 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .undo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 87, 34, 0.4);
+        }
+
+        .undo-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            border-radius: 10px;
+            font-weight: 700;
+            box-shadow: 0 5px 25px rgba(76, 175, 80, 0.4);
+            z-index: 10000;
+            animation: slideIn 0.3s ease, slideOut 0.3s ease 2.7s;
+            opacity: 0;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(400px); opacity: 0; }
+        }
+
+        .team-management-panel {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(45, 27, 78, 0.6);
+            border: 2px solid rgba(232, 196, 240, 0.3);
+            border-radius: 15px;
+        }
+
+        .team-management-panel.active {
+            display: block;
+        }
+
+        .team-list-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: rgba(232, 196, 240, 0.05);
+            border: 1px solid rgba(232, 196, 240, 0.1);
+            border-radius: 8px;
+        }
+
+        .team-list-name {
+            flex: 1;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .delete-team-btn {
+            padding: 8px 16px;
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.4);
+            color: #f44336;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+        }
+
+        .delete-team-btn:hover {
+            background: rgba(244, 67, 54, 0.3);
+            transform: scale(1.05);
+        }
+
         .advertisement-section {
             margin-top: 35px;
             padding: 25px;
@@ -1100,6 +1356,43 @@
         <div class="host-controls" id="hostControls">
             <button class="add-team-btn" onclick="addNewTeam()">+ Add New Team</button>
             <button class="reset-scores-btn" onclick="resetAllScores()">Reset All Scores</button>
+            <button class="undo-btn" id="undoBtn" onclick="undoLastChange()" disabled>↶ Undo</button>
+        </div>
+
+        <!-- Enhanced Round Selector -->
+        <div class="round-selector" id="roundSelector">
+            <div class="round-selector-header">
+                <h3>📝 Quick Score Entry</h3>
+                <p>Select a round and enter all team scores at once</p>
+            </div>
+            
+            <div class="round-buttons">
+                <button class="round-btn" onclick="selectRound(0)">TR</button>
+                <button class="round-btn" onclick="selectRound(1)">R1</button>
+                <button class="round-btn" onclick="selectRound(2)">R2</button>
+                <button class="round-btn" onclick="selectRound(3)">R3</button>
+                <button class="round-btn" onclick="selectRound(4)">R4</button>
+                <button class="round-btn" onclick="selectRound(5)">R5</button>
+            </div>
+
+            <div class="quick-entry-panel" id="quickEntryPanel">
+                <!-- Teams will be populated here -->
+            </div>
+
+            <button class="save-round-btn" id="saveRoundBtn" onclick="saveRoundScores()" disabled>
+                💾 Save All Scores for This Round
+            </button>
+        </div>
+
+        <!-- Team Management Panel -->
+        <div class="team-management-panel" id="teamManagementPanel">
+            <div class="round-selector-header">
+                <h3>👥 Manage Teams</h3>
+                <p>Edit or delete teams</p>
+            </div>
+            <div id="teamListContainer">
+                <!-- Teams will be populated here -->
+            </div>
         </div>
 
         <div class="last-updated" id="lastUpdated">
@@ -1141,6 +1434,9 @@
         let isHostMode = false;
         const HOST_PASSWORD = 'music2024';
         let db = null;
+        let currentRound = null;
+        let undoStack = [];
+        let quickEntryData = {};
 
         // Handle host mode toggle
         document.getElementById('hostModeCheckbox').addEventListener('change', function(e) {
@@ -1150,11 +1446,17 @@
                     isHostMode = true;
                     document.getElementById('hostHint').classList.add('active');
                     document.getElementById('hostControls').classList.add('active');
-                    alert('Host mode activated! Click any team name or score to edit, or add new teams.');
+                    document.getElementById('roundSelector').classList.add('active');
+                    document.getElementById('teamManagementPanel').classList.add('active');
+                    showToast('✅ Host mode activated!');
                     // Re-render to show input fields
                     if (db) {
                         db.collection('quiz').doc('teams').get().then((doc) => {
-                            if (doc.exists) renderScoreboard(doc.data());
+                            if (doc.exists) {
+                                renderScoreboard(doc.data());
+                                renderQuickEntry(doc.data());
+                                renderTeamManagement(doc.data());
+                            }
                         });
                     }
                 } else {
@@ -1165,6 +1467,8 @@
                 isHostMode = false;
                 document.getElementById('hostHint').classList.remove('active');
                 document.getElementById('hostControls').classList.remove('active');
+                document.getElementById('roundSelector').classList.remove('active');
+                document.getElementById('teamManagementPanel').classList.remove('active');
                 // Re-render to show display fields
                 if (db) {
                     db.collection('quiz').doc('teams').get().then((doc) => {
@@ -1493,9 +1797,225 @@
             }
         }
 
+        // Enhanced Host Mode Functions
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'success-toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '1';
+            }, 10);
+            
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 3000);
+        }
+
+        function selectRound(roundIndex) {
+            currentRound = roundIndex;
+            
+            // Update button states
+            document.querySelectorAll('.round-btn').forEach((btn, idx) => {
+                if (idx === roundIndex) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            // Render quick entry for this round
+            if (db) {
+                db.collection('quiz').doc('teams').get().then((doc) => {
+                    if (doc.exists) renderQuickEntry(doc.data());
+                });
+            }
+            
+            document.getElementById('saveRoundBtn').disabled = false;
+        }
+
+        function renderQuickEntry(data) {
+            if (currentRound === null) {
+                document.getElementById('quickEntryPanel').innerHTML = '<p style="text-align:center; color:#999; padding:20px;">Select a round above to begin</p>';
+                return;
+            }
+            
+            const roundNames = ['TR', 'R1', 'R2', 'R3', 'R4', 'R5'];
+            const teams = Object.entries(data)
+                .filter(([key]) => key.startsWith('team'))
+                .map(([key, value]) => ({ key, ...value }))
+                .sort((a, b) => a.name.localeCompare(b.name));
+            
+            if (teams.length === 0) {
+                document.getElementById('quickEntryPanel').innerHTML = '<p style="text-align:center; color:#999; padding:20px;">No teams yet. Add teams first!</p>';
+                return;
+            }
+            
+            const html = teams.map(team => {
+                const currentScore = team.rounds[currentRound] || 0;
+                return `
+                    <div class="quick-entry-team">
+                        <div class="quick-entry-team-name">${team.name}</div>
+                        <div class="quick-score-buttons">
+                            <button class="quick-score-btn" onclick="quickAddScore('${team.key}', 1)">+1</button>
+                            <button class="quick-score-btn" onclick="quickAddScore('${team.key}', 5)">+5</button>
+                            <button class="quick-score-btn" onclick="quickAddScore('${team.key}', 10)">+10</button>
+                        </div>
+                        <input 
+                            type="number" 
+                            class="quick-entry-input" 
+                            value="${currentScore}" 
+                            min="0"
+                            data-team="${team.key}"
+                            onchange="updateQuickEntry('${team.key}', this.value)"
+                        >
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('quickEntryPanel').innerHTML = html;
+            
+            // Initialize quick entry data
+            teams.forEach(team => {
+                quickEntryData[team.key] = team.rounds[currentRound] || 0;
+            });
+        }
+
+        function quickAddScore(teamKey, amount) {
+            const input = document.querySelector(`input[data-team="${teamKey}"]`);
+            if (input) {
+                const newValue = parseInt(input.value || 0) + amount;
+                input.value = newValue;
+                quickEntryData[teamKey] = newValue;
+            }
+        }
+
+        function updateQuickEntry(teamKey, value) {
+            quickEntryData[teamKey] = parseInt(value) || 0;
+        }
+
+        async function saveRoundScores() {
+            if (currentRound === null) return;
+            
+            const saveBtn = document.getElementById('saveRoundBtn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = '💾 Saving...';
+            
+            try {
+                const teamsRef = db.collection('quiz').doc('teams');
+                const doc = await teamsRef.get();
+                const data = doc.data();
+                
+                // Save previous state for undo
+                undoStack.push(JSON.parse(JSON.stringify(data)));
+                if (undoStack.length > 10) undoStack.shift(); // Keep only last 10
+                document.getElementById('undoBtn').disabled = false;
+                
+                // Update scores for this round
+                Object.keys(quickEntryData).forEach(teamKey => {
+                    if (data[teamKey]) {
+                        data[teamKey].rounds[currentRound] = quickEntryData[teamKey];
+                        data[teamKey].total = data[teamKey].rounds.reduce((sum, score) => sum + score, 0);
+                    }
+                });
+                
+                await teamsRef.set(data);
+                
+                const roundNames = ['TR', 'R1', 'R2', 'R3', 'R4', 'R5'];
+                showToast(`✅ ${roundNames[currentRound]} scores saved!`);
+                saveBtn.textContent = '💾 Save All Scores for This Round';
+                saveBtn.disabled = false;
+                
+            } catch (error) {
+                console.error('Error saving scores:', error);
+                alert('Error saving scores!');
+                saveBtn.textContent = '💾 Save All Scores for This Round';
+                saveBtn.disabled = false;
+            }
+        }
+
+        async function undoLastChange() {
+            if (undoStack.length === 0) return;
+            
+            const previousData = undoStack.pop();
+            
+            try {
+                const teamsRef = db.collection('quiz').doc('teams');
+                await teamsRef.set(previousData);
+                showToast('↶ Undo successful!');
+                
+                if (undoStack.length === 0) {
+                    document.getElementById('undoBtn').disabled = true;
+                }
+            } catch (error) {
+                console.error('Error undoing:', error);
+                alert('Error undoing change!');
+            }
+        }
+
+        function renderTeamManagement(data) {
+            const teams = Object.entries(data)
+                .filter(([key]) => key.startsWith('team'))
+                .map(([key, value]) => ({ key, ...value }))
+                .sort((a, b) => a.name.localeCompare(b.name));
+            
+            if (teams.length === 0) {
+                document.getElementById('teamListContainer').innerHTML = '<p style="text-align:center; color:#999; padding:20px;">No teams yet</p>';
+                return;
+            }
+            
+            const html = teams.map(team => `
+                <div class="team-list-item">
+                    <div class="team-list-name">${team.name}</div>
+                    <div style="color:#999; font-size:0.9em;">Total: ${team.total}</div>
+                    <button class="delete-team-btn" onclick="deleteTeam('${team.key}', '${team.name}')">
+                        🗑️ Delete
+                    </button>
+                </div>
+            `).join('');
+            
+            document.getElementById('teamListContainer').innerHTML = html;
+        }
+
+        async function deleteTeam(teamKey, teamName) {
+            const confirm = window.confirm(`Delete "${teamName}"? This cannot be undone!`);
+            if (!confirm) return;
+            
+            try {
+                const teamsRef = db.collection('quiz').doc('teams');
+                const doc = await teamsRef.get();
+                const data = doc.data();
+                
+                // Save for undo
+                undoStack.push(JSON.parse(JSON.stringify(data)));
+                if (undoStack.length > 10) undoStack.shift();
+                document.getElementById('undoBtn').disabled = false;
+                
+                delete data[teamKey];
+                
+                await teamsRef.set(data);
+                showToast(`🗑️ "${teamName}" deleted`);
+                
+                renderTeamManagement(data);
+                renderQuickEntry(data);
+                
+            } catch (error) {
+                console.error('Error deleting team:', error);
+                alert('Error deleting team!');
+            }
+        }
+
         // Make functions globally available
         window.addNewTeam = addNewTeam;
         window.resetAllScores = resetAllScores;
+        window.selectRound = selectRound;
+        window.quickAddScore = quickAddScore;
+        window.updateQuickEntry = updateQuickEntry;
+        window.saveRoundScores = saveRoundScores;
+        window.undoLastChange = undoLastChange;
+        window.deleteTeam = deleteTeam;
 
         // Full screen mode toggle
         let isFullscreen = false;
