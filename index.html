@@ -272,13 +272,97 @@
         .quick-entry-column {
             background: rgba(26, 10, 46, 0.95);
             border-radius: 20px;
-            padding: 20px;
+            padding: 0;
             border: 2px solid rgba(232, 196, 240, 0.3);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             max-height: calc(100vh - 100px);
-            overflow-y: auto;
+            overflow: hidden;
             position: sticky;
             top: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Tab Navigation */
+        .tab-navigation {
+            display: flex;
+            border-bottom: 2px solid rgba(232, 196, 240, 0.2);
+            background: rgba(45, 27, 78, 0.6);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 18px 20px;
+            background: transparent;
+            border: none;
+            color: #999;
+            font-weight: 700;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .tab-button:first-child {
+            border-radius: 18px 0 0 0;
+        }
+
+        .tab-button:last-child {
+            border-radius: 0 18px 0 0;
+        }
+
+        .tab-button:hover {
+            background: rgba(232, 196, 240, 0.1);
+            color: #e8c4f0;
+        }
+
+        .tab-button.active {
+            background: rgba(232, 196, 240, 0.15);
+            color: #e8c4f0;
+            border-bottom: 3px solid #e8c4f0;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #e8c4f0 20%, #e8c4f0 80%, transparent);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            padding: 25px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .tab-content::-webkit-scrollbar-track {
+            background: rgba(232, 196, 240, 0.1);
+            border-radius: 4px;
+        }
+
+        .tab-content::-webkit-scrollbar-thumb {
+            background: rgba(232, 196, 240, 0.3);
+            border-radius: 4px;
+        }
+
+        .tab-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(232, 196, 240, 0.5);
         }
 
         .quick-entry-column::-webkit-scrollbar {
@@ -1567,53 +1651,82 @@
                 </div>
             </div>
 
-            <!-- RIGHT: Quick Entry Panel -->
+            <!-- RIGHT: Tabbed Panel -->
             <div class="quick-entry-column">
-                <div class="round-selector-header">
-                    <h3>⚡ Quick Entry</h3>
-                    <p>Select round, enter scores, save!</p>
-                </div>
-                
-                <div class="round-buttons">
-                    <button class="round-btn" onclick="selectRound(0)">TR</button>
-                    <button class="round-btn" onclick="selectRound(1)">R1</button>
-                    <button class="round-btn" onclick="selectRound(2)">R2</button>
-                    <button class="round-btn" onclick="selectRound(3)">R3</button>
-                    <button class="round-btn" onclick="selectRound(4)">R4</button>
-                    <button class="round-btn" onclick="selectRound(5)">R5</button>
+                <!-- Tab Navigation -->
+                <div class="tab-navigation">
+                    <button class="tab-button active" onclick="switchTab('quickEntry')">
+                        ⚡ Quick Entry
+                    </button>
+                    <button class="tab-button" onclick="switchTab('manageTeams')">
+                        👥 Manage Teams
+                    </button>
                 </div>
 
-                <div class="quick-entry-panel" id="quickEntryPanel">
-                    <p style="text-align:center; color:#999; padding:20px; font-size:0.9em;">
-                        👆 Select a round above to start
-                    </p>
-                </div>
-
-                <button class="save-round-btn" id="saveRoundBtn" onclick="saveRoundScores()" disabled>
-                    💾 Save Round
-                </button>
-
-                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(232, 196, 240, 0.2);">
+                <!-- Tab 1: Quick Entry -->
+                <div class="tab-content active" id="quickEntryTab">
                     <div class="round-selector-header">
-                        <h3 style="font-size:1.1em;">👥 Manage</h3>
+                        <h3>Select Round</h3>
+                        <p>Enter scores for all teams at once</p>
                     </div>
-                    <div style="display:flex; flex-direction:column; gap:8px;">
-                        <button class="add-team-btn" onclick="addNewTeam()" style="width:100%; padding:12px;">+ Add Team</button>
-                        <button class="undo-btn" id="undoBtn" onclick="undoLastChange()" disabled style="width:100%; padding:12px;">↶ Undo</button>
+                    
+                    <div class="round-buttons">
+                        <button class="round-btn" onclick="selectRound(0)">TR</button>
+                        <button class="round-btn" onclick="selectRound(1)">R1</button>
+                        <button class="round-btn" onclick="selectRound(2)">R2</button>
+                        <button class="round-btn" onclick="selectRound(3)">R3</button>
+                        <button class="round-btn" onclick="selectRound(4)">R4</button>
+                        <button class="round-btn" onclick="selectRound(5)">R5</button>
                     </div>
-                    <div id="teamListContainer" style="margin-top:15px; max-height:200px; overflow-y:auto;">
-                        <!-- Team list -->
+
+                    <div class="quick-entry-panel" id="quickEntryPanel">
+                        <p style="text-align:center; color:#999; padding:20px; font-size:0.9em;">
+                            👆 Select a round above to start
+                        </p>
+                    </div>
+
+                    <button class="save-round-btn" id="saveRoundBtn" onclick="saveRoundScores()" disabled>
+                        💾 Save Round Scores
+                    </button>
+                </div>
+
+                <!-- Tab 2: Manage Teams -->
+                <div class="tab-content" id="manageTeamsTab">
+                    <div class="round-selector-header">
+                        <h3>Team Management</h3>
+                        <p>Add, delete, or undo changes</p>
+                    </div>
+                    
+                    <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
+                        <button class="add-team-btn" onclick="addNewTeam()" style="width:100%; padding:14px; font-size:1em;">
+                            ➕ Add New Team
+                        </button>
+                        <button class="undo-btn" id="undoBtnTab" onclick="undoLastChange()" disabled style="width:100%; padding:14px; font-size:1em;">
+                            ↶ Undo Last Change
+                        </button>
+                        <button class="reset-scores-btn" onclick="resetAllScores()" style="width:100%; padding:14px; font-size:1em;">
+                            🔄 Reset All Scores
+                        </button>
+                    </div>
+
+                    <div class="round-selector-header" style="margin-top:20px; padding-top:20px; border-top:2px solid rgba(232, 196, 240, 0.2);">
+                        <h3 style="font-size:1.1em;">Current Teams</h3>
+                        <p style="font-size:0.85em;">Click delete to remove teams</p>
+                    </div>
+
+                    <div id="teamListContainer" style="margin-top:10px;">
+                        <!-- Team list will be populated here -->
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="host-hint" id="hostHint">
-            ✏️ Host Mode Active - Use Quick Entry panel on the right! →
+            ✏️ Host Mode Active - Use tabs on the right! →
         </div>
 
-        <div class="host-controls" id="hostControls">
-            <button class="reset-scores-btn" onclick="resetAllScores()">Reset All Scores</button>
+        <div class="host-controls" id="hostControls" style="display:none;">
+            <!-- Hidden - functionality moved to tabs -->
         </div>
 
         <!-- Hidden panels -->
@@ -2283,7 +2396,7 @@
                 // Save previous state for undo
                 undoStack.push(JSON.parse(JSON.stringify(data)));
                 if (undoStack.length > 10) undoStack.shift(); // Keep only last 10
-                document.getElementById('undoBtn').disabled = false;
+                syncUndoButtons();
                 
                 // Update scores for this round
                 Object.keys(quickEntryData).forEach(teamKey => {
@@ -2319,7 +2432,7 @@
                 showToast('↶ Undo successful!');
                 
                 if (undoStack.length === 0) {
-                    document.getElementById('undoBtn').disabled = true;
+                    syncUndoButtons();
                 }
             } catch (error) {
                 console.error('Error undoing:', error);
@@ -2363,7 +2476,7 @@
                 // Save for undo
                 undoStack.push(JSON.parse(JSON.stringify(data)));
                 if (undoStack.length > 10) undoStack.shift();
-                document.getElementById('undoBtn').disabled = false;
+                syncUndoButtons();
                 
                 delete data[teamKey];
                 
@@ -2388,6 +2501,46 @@
         window.saveRoundScores = saveRoundScores;
         window.undoLastChange = undoLastChange;
         window.deleteTeam = deleteTeam;
+
+        // Tab switching function
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Deactivate all tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            if (tabName === 'quickEntry') {
+                document.getElementById('quickEntryTab').classList.add('active');
+                document.querySelectorAll('.tab-button')[0].classList.add('active');
+            } else if (tabName === 'manageTeams') {
+                document.getElementById('manageTeamsTab').classList.add('active');
+                document.querySelectorAll('.tab-button')[1].classList.add('active');
+            }
+        }
+
+        // Sync undo button states
+        function syncUndoButtons() {
+            const disabled = undoStack.length === 0;
+            const undoBtn = document.getElementById('undoBtn');
+            const undoBtnTab = document.getElementById('undoBtnTab');
+            if (undoBtn) undoBtn.disabled = disabled;
+            if (undoBtnTab) undoBtnTab.disabled = disabled;
+        }
+
+        // Update renderTeamManagement to sync undo button
+        const originalUndoLastChange = undoLastChange;
+        undoLastChange = async function() {
+            await originalUndoLastChange();
+            syncUndoButtons();
+        };
+
+        window.switchTab = switchTab;
 
         // Full screen mode toggle
         let isFullscreen = false;
