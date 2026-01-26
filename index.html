@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="format-detection" content="telephone=no">
-    <title>Music and Minds - Live Scoreboard</title>
+    <title>Quiz for a Cause - Live Scoreboard</title>
     <style>
         * {
             margin: 0;
@@ -16,7 +16,7 @@
 
         body {
             font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 30%, #1a0a2e 70%, #0d0517 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -36,34 +36,58 @@
             width: 100%;
             height: 100%;
             background-image: 
-                radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+                radial-gradient(circle at 20% 30%, rgba(232, 196, 240, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(232, 196, 240, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
             animation: sparkleMove 20s ease-in-out infinite;
-            opacity: 0.4;
+            opacity: 0.6;
             pointer-events: none;
             z-index: 0;
         }
 
+        body::after {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -10%;
+            width: 120%;
+            height: 200%;
+            background: linear-gradient(135deg, transparent 0%, rgba(232, 196, 240, 0.1) 20%, transparent 40%, rgba(255, 255, 255, 0.05) 60%, transparent 80%);
+            transform: rotate(-15deg);
+            pointer-events: none;
+            z-index: 0;
+            animation: diagonalShimmer 15s ease-in-out infinite;
+        }
+
         @keyframes sparkleMove {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 0.6; }
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes diagonalShimmer {
+            0%, 100% { transform: rotate(-15deg) translateY(0); opacity: 0.3; }
+            50% { transform: rotate(-15deg) translateY(-10%); opacity: 0.5; }
         }
 
         .scoreboard-container {
             width: 100%;
             max-width: 1100px;
-            background: rgba(26, 26, 46, 0.95);
+            background: rgba(26, 10, 46, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 30px;
-            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.9);
+            box-shadow: 
+                0 30px 90px rgba(0, 0, 0, 0.9),
+                0 0 60px rgba(232, 196, 240, 0.2),
+                inset 0 1px 0 rgba(232, 196, 240, 0.1);
             padding: 40px 30px;
             position: relative;
             z-index: 1;
+            border: 1px solid rgba(232, 196, 240, 0.2);
         }
 
         .host-mode-toggle {
-            background: linear-gradient(135deg, rgba(42, 42, 62, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%);
-            border: 2px solid rgba(212, 175, 55, 0.4);
+            background: linear-gradient(135deg, rgba(45, 27, 78, 0.95) 0%, rgba(26, 10, 46, 0.95) 100%);
+            border: 2px solid rgba(232, 196, 240, 0.4);
             padding: 15px 25px;
             border-radius: 12px;
             margin-bottom: 30px;
@@ -76,7 +100,7 @@
             gap: 12px;
             cursor: pointer;
             font-weight: 700;
-            color: #d4af37;
+            color: #e8c4f0;
             font-size: 1em;
             text-transform: uppercase;
             letter-spacing: 1.5px;
@@ -86,7 +110,7 @@
             width: 22px;
             height: 22px;
             cursor: pointer;
-            accent-color: #d4af37;
+            accent-color: #e8c4f0;
         }
 
         .fullscreen-btn {
@@ -96,14 +120,14 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #d4af37 0%, #c9a22e 100%);
-            border: 2px solid rgba(255, 215, 0, 0.5);
-            color: #1a1a2e;
+            background: linear-gradient(135deg, #e8c4f0 0%, #d4a0e8 100%);
+            border: 2px solid rgba(232, 196, 240, 0.5);
+            color: #1a0a2e;
             font-size: 1.5em;
             cursor: pointer;
             z-index: 1000;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 4px 15px rgba(232, 196, 240, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -111,8 +135,8 @@
 
         .fullscreen-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(212, 175, 55, 0.6);
-            background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+            box-shadow: 0 6px 25px rgba(232, 196, 240, 0.6);
+            background: linear-gradient(135deg, #f0d4f8 0%, #e8c4f0 100%);
         }
 
         .fullscreen-btn:active {
@@ -193,7 +217,7 @@
         .scoreboard-title {
             font-size: 2.5em;
             font-weight: 900;
-            background: linear-gradient(135deg, #ffd700 0%, #d4af37 50%, #ffd700 100%);
+            background: linear-gradient(135deg, #e8c4f0 0%, #e8c4f0 50%, #e8c4f0 100%);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -221,7 +245,7 @@
             border-radius: 10px;
             font-size: 0.85em;
             font-weight: 700;
-            color: #d4af37;
+            color: #e8c4f0;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -247,7 +271,7 @@
             gap: 10px;
             align-items: center;
             background: linear-gradient(135deg, rgba(42, 42, 62, 0.6) 0%, rgba(26, 26, 46, 0.8) 100%);
-            border: 2px solid rgba(212, 175, 55, 0.2);
+            border: 2px solid rgba(232, 196, 240, 0.2);
             padding: 18px 20px;
             border-radius: 15px;
             transition: all 0.3s ease;
@@ -277,16 +301,16 @@
                 flex-direction: column;
                 gap: 12px;
                 background: linear-gradient(135deg, rgba(42, 42, 62, 0.6) 0%, rgba(26, 26, 46, 0.8) 100%);
-                border: 2px solid rgba(212, 175, 55, 0.2);
+                border: 2px solid rgba(232, 196, 240, 0.2);
                 padding: 15px 12px;
                 border-radius: 12px;
                 margin-bottom: 12px;
             }
 
             .mobile-team-wrapper.rank-1 {
-                background: linear-gradient(135deg, rgba(255, 215, 0, 0.25) 0%, rgba(212, 175, 55, 0.15) 100%);
-                border: 3px solid #d4af37;
-                box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+                background: linear-gradient(135deg, rgba(232, 196, 240, 0.25) 0%, rgba(232, 196, 240, 0.15) 100%);
+                border: 3px solid #e8c4f0;
+                box-shadow: 0 10px 30px rgba(232, 196, 240, 0.3);
             }
 
             .mobile-team-wrapper.rank-2 {
@@ -314,7 +338,7 @@
             }
 
             .rank-1 .mobile-team-rank {
-                color: #ffd700;
+                color: #e8c4f0;
                 font-size: 2.5em;
             }
 
@@ -345,8 +369,8 @@
                 font-weight: 700;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
-                background: rgba(255, 215, 0, 0.15);
-                border: 2px solid #ffd700;
+                background: rgba(232, 196, 240, 0.15);
+                border: 2px solid #e8c4f0;
                 border-radius: 8px;
                 padding: 10px 12px;
                 outline: none;
@@ -357,8 +381,8 @@
             }
 
             .mobile-team-name-input:focus {
-                background: rgba(255, 215, 0, 0.25);
-                box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+                background: rgba(232, 196, 240, 0.25);
+                box-shadow: 0 0 15px rgba(232, 196, 240, 0.4);
             }
 
             /* Line 2: Scores + Total */
@@ -375,7 +399,7 @@
                 padding: 5px 0;
                 flex: 1;
                 scrollbar-width: thin;
-                scrollbar-color: #d4af37 rgba(255, 215, 0, 0.1);
+                scrollbar-color: #e8c4f0 rgba(232, 196, 240, 0.1);
             }
 
             .mobile-scrollable::-webkit-scrollbar {
@@ -383,19 +407,19 @@
             }
 
             .mobile-scrollable::-webkit-scrollbar-track {
-                background: rgba(255, 215, 0, 0.1);
+                background: rgba(232, 196, 240, 0.1);
                 border-radius: 3px;
             }
 
             .mobile-scrollable::-webkit-scrollbar-thumb {
-                background: #d4af37;
+                background: #e8c4f0;
                 border-radius: 3px;
             }
 
             .mobile-score-display,
             .mobile-score-input {
                 font-size: 1.3em;
-                color: #d4af37;
+                color: #e8c4f0;
                 font-weight: 700;
                 text-align: center;
                 font-family: 'Courier New', monospace;
@@ -407,9 +431,9 @@
             }
 
             .mobile-score-input {
-                color: #ffd700;
-                background: rgba(255, 215, 0, 0.15);
-                border: 2px solid #ffd700;
+                color: #e8c4f0;
+                background: rgba(232, 196, 240, 0.15);
+                border: 2px solid #e8c4f0;
                 outline: none;
                 font-size: 16px;
                 min-height: 52px;
@@ -417,8 +441,8 @@
             }
 
             .mobile-score-input:focus {
-                background: rgba(255, 215, 0, 0.25);
-                box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+                background: rgba(232, 196, 240, 0.25);
+                box-shadow: 0 0 15px rgba(232, 196, 240, 0.4);
             }
 
             .mobile-score-input.saving {
@@ -428,7 +452,7 @@
 
             .mobile-team-total {
                 font-size: 2.4em;
-                color: #ffd700;
+                color: #e8c4f0;
                 font-weight: 900;
                 text-align: center;
                 font-family: 'Courier New', monospace;
@@ -438,7 +462,7 @@
 
             .rank-1 .mobile-team-total {
                 font-size: 2.8em;
-                text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+                text-shadow: 0 0 20px rgba(232, 196, 240, 0.5);
             }
 
             /* Round labels */
@@ -464,7 +488,7 @@
 
             .mobile-round-label {
                 font-size: 0.85em;
-                color: #d4af37;
+                color: #e8c4f0;
                 font-weight: 700;
                 text-transform: uppercase;
                 text-align: center;
@@ -474,7 +498,7 @@
 
             .mobile-total-label {
                 font-size: 0.85em;
-                color: #d4af37;
+                color: #e8c4f0;
                 font-weight: 700;
                 text-transform: uppercase;
                 text-align: center;
@@ -508,7 +532,7 @@
 
             .mobile-round-label {
                 font-size: 0.75em;
-                color: #d4af37;
+                color: #e8c4f0;
                 font-weight: 700;
                 text-transform: uppercase;
                 text-align: center;
@@ -519,13 +543,13 @@
 
         .team-row:hover {
             transform: translateX(5px);
-            border-color: rgba(212, 175, 55, 0.4);
+            border-color: rgba(232, 196, 240, 0.4);
         }
 
         .rank-1 {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.25) 0%, rgba(212, 175, 55, 0.15) 100%);
-            border: 3px solid #d4af37;
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            background: linear-gradient(135deg, rgba(232, 196, 240, 0.25) 0%, rgba(232, 196, 240, 0.15) 100%);
+            border: 3px solid #e8c4f0;
+            box-shadow: 0 10px 30px rgba(232, 196, 240, 0.3);
         }
 
         .rank-2 {
@@ -544,7 +568,7 @@
         }
 
         .rank-1 .team-rank {
-            color: #ffd700;
+            color: #e8c4f0;
             font-size: 2.2em;
         }
 
@@ -572,8 +596,8 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            background: rgba(255, 215, 0, 0.15);
-            border: 2px solid #ffd700;
+            background: rgba(232, 196, 240, 0.15);
+            border: 2px solid #e8c4f0;
             border-radius: 8px;
             padding: 8px 12px;
             outline: none;
@@ -583,13 +607,13 @@
         }
 
         .team-name-input:focus {
-            background: rgba(255, 215, 0, 0.25);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            background: rgba(232, 196, 240, 0.25);
+            box-shadow: 0 0 15px rgba(232, 196, 240, 0.4);
         }
 
         .score-display {
             font-size: 1.2em;
-            color: #d4af37;
+            color: #e8c4f0;
             font-weight: 700;
             text-align: center;
             font-family: 'Courier New', monospace;
@@ -597,12 +621,12 @@
 
         .score-input {
             font-size: 1.2em;
-            color: #ffd700;
+            color: #e8c4f0;
             font-weight: 700;
             text-align: center;
             font-family: 'Courier New', monospace;
-            background: rgba(255, 215, 0, 0.15);
-            border: 2px solid #ffd700;
+            background: rgba(232, 196, 240, 0.15);
+            border: 2px solid #e8c4f0;
             border-radius: 8px;
             padding: 8px 5px;
             outline: none;
@@ -610,8 +634,8 @@
         }
 
         .score-input:focus {
-            background: rgba(255, 215, 0, 0.25);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            background: rgba(232, 196, 240, 0.25);
+            box-shadow: 0 0 15px rgba(232, 196, 240, 0.4);
         }
 
         .score-input.saving {
@@ -621,7 +645,7 @@
 
         .team-total {
             font-size: 2em;
-            color: #ffd700;
+            color: #e8c4f0;
             font-weight: 900;
             text-align: center;
             font-family: 'Courier New', monospace;
@@ -629,7 +653,7 @@
 
         .rank-1 .team-total {
             font-size: 2.5em;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            text-shadow: 0 0 20px rgba(232, 196, 240, 0.5);
         }
 
         .host-hint {
@@ -712,7 +736,7 @@
 
         .advertisement-section h3 {
             text-align: center;
-            color: #d4af37;
+            color: #e8c4f0;
             font-size: 1.4em;
             margin-bottom: 20px;
             font-weight: 800;
@@ -780,11 +804,11 @@
             text-align: center;
             margin-top: 35px;
             padding-top: 25px;
-            border-top: 2px solid rgba(212, 175, 55, 0.3);
+            border-top: 2px solid rgba(232, 196, 240, 0.3);
         }
 
         .event-branding h3 {
-            color: #ffd700;
+            color: #e8c4f0;
             font-size: 1.3em;
             margin-bottom: 8px;
             font-style: italic;
@@ -1048,9 +1072,9 @@
         </button>
 
         <div class="scoreboard-header">
-            <div class="trophy-icon">🏆</div>
-            <h1 class="scoreboard-title">LIVE SCOREBOARD</h1>
-            <p class="scoreboard-subtitle">Current Standings</p>
+            <div class="trophy-icon">✨</div>
+            <h1 class="scoreboard-title">QUIZ FOR A CAUSE</h1>
+            <p class="scoreboard-subtitle">Live Scoreboard</p>
         </div>
 
         <div class="column-headers">
@@ -1103,8 +1127,9 @@
         </div>
 
         <div class="event-branding">
-            <h3>Keep Our Mum Jumping</h3>
-            <p>Tewinbury Farm, Tythe Barn</p>
+            <h3>31 January | 6:30PM - LATE</h3>
+            <p>Knebworth Golf Club</p>
+            <p style="margin-top: 10px; font-size: 0.9em; opacity: 0.9;">Bowelbabe Fund for Cancer Research UK</p>
         </div>
     </div>
 
@@ -1228,7 +1253,7 @@
                     : `<div class="team-name-display">${team.name}</div>`;
 
                 const scoresHTML = [0, 1, 2, 3, 4, 5].map(roundIndex => {
-                    const score = team.rounds && team.rounds[roundIndex] !== undefined ? team.rounds[roundIndex] : 0;
+                    const score = team.rounds[roundIndex];
                     if (isHostMode) {
                         return `<input type="number" class="score-input" value="${score}" min="0" data-team="${team.key}" data-round="${roundIndex}">`;
                     } else {
@@ -1279,7 +1304,7 @@
                     : `<div class="mobile-team-name-display">${team.name}</div>`;
 
                 const scoresHTML = [0, 1, 2, 3, 4, 5].map(roundIndex => {
-                    const score = team.rounds && team.rounds[roundIndex] !== undefined ? team.rounds[roundIndex] : 0;
+                    const score = team.rounds[roundIndex];
                     if (isHostMode) {
                         return `<input type="number" class="mobile-score-input" value="${score}" min="0" data-team="${team.key}" data-round="${roundIndex}">`;
                     } else {
