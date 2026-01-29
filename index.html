@@ -218,7 +218,7 @@
         }
 
         .host-mode-layout .column-headers {
-            grid-template-columns: 40px 1fr 45px 45px 45px 45px 45px 45px 60px;
+            grid-template-columns: 40px 1fr 45px 45px 45px 45px 45px 60px;
             gap: 6px;
             padding: 8px 10px;
             font-size: 0.7em;
@@ -226,7 +226,7 @@
         }
 
         .host-mode-layout .team-row {
-            grid-template-columns: 40px 1fr 45px 45px 45px 45px 45px 45px 60px;
+            grid-template-columns: 40px 1fr 45px 45px 45px 45px 45px 60px;
             gap: 6px;
             padding: 10px;
             min-height: 45px;
@@ -258,6 +258,8 @@
 
         .host-mode-layout .rank-1 .team-total {
             font-size: 1.3em;
+            color: #FFD700;
+            font-weight: 900;
         }
 
         /* Mobile view inside host mode scoreboard */
@@ -474,7 +476,7 @@
 
         .column-headers {
             display: grid;
-            grid-template-columns: 60px 1fr 70px 70px 70px 70px 70px 70px 90px;
+            grid-template-columns: 60px 1fr 70px 70px 70px 70px 70px 90px;
             gap: 10px;
             padding: 12px 20px;
             margin-bottom: 10px;
@@ -504,7 +506,7 @@
 
         .team-row {
             display: grid;
-            grid-template-columns: 60px 1fr 70px 70px 70px 70px 70px 70px 90px;
+            grid-template-columns: 60px 1fr 70px 70px 70px 70px 70px 90px;
             gap: 10px;
             align-items: center;
             background: linear-gradient(135deg, rgba(42, 42, 62, 0.6) 0%, rgba(26, 26, 46, 0.8) 100%);
@@ -784,9 +786,22 @@
         }
 
         .rank-1 {
-            background: linear-gradient(135deg, rgba(232, 196, 240, 0.25) 0%, rgba(232, 196, 240, 0.15) 100%);
-            border: 3px solid #e8c4f0;
-            box-shadow: 0 10px 30px rgba(232, 196, 240, 0.3);
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3) 0%, rgba(218, 165, 32, 0.2) 100%);
+            border: 3px solid #FFD700;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4), 0 0 20px rgba(255, 215, 0, 0.3);
+            position: relative;
+        }
+
+        .rank-1::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(218, 165, 32, 0.1) 100%);
+            pointer-events: none;
+            border-radius: inherit;
         }
 
         .rank-2 {
@@ -805,8 +820,10 @@
         }
 
         .rank-1 .team-rank {
-            color: #e8c4f0;
+            color: #FFD700;
             font-size: 2.2em;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            font-weight: 900;
         }
 
         .rank-2 .team-rank {
@@ -890,7 +907,9 @@
 
         .rank-1 .team-total {
             font-size: 2.5em;
-            text-shadow: 0 0 20px rgba(232, 196, 240, 0.5);
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 10px rgba(255, 215, 0, 0.4);
+            font-weight: 900;
         }
 
         .host-hint {
@@ -987,38 +1006,38 @@
 
         .round-selector-header {
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .round-selector-header h3 {
             color: #e8c4f0;
-            font-size: 1.3em;
-            margin-bottom: 8px;
-            font-weight: 800;
+            font-size: 1.1em;
+            margin-bottom: 6px;
+            font-weight: 700;
         }
 
         .round-selector-header p {
             color: #999;
-            font-size: 0.85em;
-            line-height: 1.4;
+            font-size: 0.75em;
+            line-height: 1.3;
         }
 
         .round-buttons {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 20px;
+            gap: 6px;
+            margin-bottom: 15px;
         }
 
         .round-btn {
-            padding: 12px 16px;
+            padding: 8px 12px;
             background: rgba(232, 196, 240, 0.1);
             border: 2px solid rgba(232, 196, 240, 0.3);
             color: #e8c4f0;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 700;
-            font-size: 0.95em;
+            font-size: 0.85em;
             transition: all 0.3s ease;
             text-align: center;
         }
@@ -1026,21 +1045,21 @@
         .round-btn:hover {
             background: rgba(232, 196, 240, 0.2);
             border-color: rgba(232, 196, 240, 0.5);
-            transform: translateY(-2px);
+            transform: translateY(-1px);
         }
 
         .round-btn.active {
             background: linear-gradient(135deg, #e8c4f0 0%, #d4a0e8 100%);
             color: #1a0a2e;
             border-color: #e8c4f0;
-            box-shadow: 0 0 20px rgba(232, 196, 240, 0.4);
+            box-shadow: 0 0 15px rgba(232, 196, 240, 0.4);
         }
 
         .quick-entry-panel {
             background: rgba(26, 10, 46, 0.4);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
             max-height: 400px;
             overflow-y: auto;
         }
@@ -1062,35 +1081,35 @@
         .quick-entry-team {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-bottom: 12px;
-            padding: 12px;
+            gap: 6px;
+            margin-bottom: 8px;
+            padding: 10px;
             background: rgba(232, 196, 240, 0.05);
-            border-radius: 8px;
+            border-radius: 6px;
             border: 1px solid rgba(232, 196, 240, 0.1);
         }
 
         .quick-entry-team-name {
             color: #fff;
             font-weight: 700;
-            font-size: 0.95em;
-            margin-bottom: 4px;
+            font-size: 0.85em;
+            margin-bottom: 2px;
         }
 
         .quick-entry-controls {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .quick-entry-input {
-            width: 70px;
+            width: 100%;
             padding: 8px 10px;
             background: rgba(232, 196, 240, 0.1);
             border: 2px solid rgba(232, 196, 240, 0.3);
-            border-radius: 8px;
+            border-radius: 6px;
             color: #e8c4f0;
-            font-size: 1.2em;
+            font-size: 1.1em;
             font-weight: 700;
             text-align: center;
             font-family: 'Courier New', monospace;
@@ -1100,56 +1119,38 @@
             outline: none;
             background: rgba(232, 196, 240, 0.2);
             border-color: #e8c4f0;
-            box-shadow: 0 0 15px rgba(232, 196, 240, 0.3);
+            box-shadow: 0 0 12px rgba(232, 196, 240, 0.3);
         }
 
         .quick-score-buttons {
-            display: flex;
-            gap: 4px;
-            flex: 1;
+            display: none; /* Hide quick score buttons */
         }
 
         .quick-score-btn {
-            flex: 1;
-            padding: 8px 10px;
-            background: rgba(76, 175, 80, 0.2);
-            border: 1px solid rgba(76, 175, 80, 0.4);
-            color: #4caf50;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 0.85em;
-            transition: all 0.2s ease;
+            display: none; /* Hide quick score buttons */
         }
-
-        .quick-score-btn:hover {
-            background: rgba(76, 175, 80, 0.3);
-            transform: scale(1.05);
-        }
-
-        .quick-score-btn:active {
             transform: scale(0.95);
         }
 
         .save-round-btn {
             width: 100%;
-            padding: 15px;
-            margin-top: 15px;
+            padding: 10px;
+            margin-top: 10px;
             background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             color: white;
             font-weight: 700;
-            font-size: 1.1em;
+            font-size: 0.9em;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             transition: all 0.3s ease;
         }
 
         .save-round-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
         }
 
         .save-round-btn:disabled {
@@ -1252,6 +1253,170 @@
         .delete-team-btn:hover {
             background: rgba(244, 67, 54, 0.3);
             transform: scale(1.05);
+        }
+
+        /* ============================================
+           UI IMPROVEMENTS
+           ============================================ */
+        
+        /* Progress Indicator */
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background: rgba(45, 27, 78, 0.6);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(232, 196, 240, 0.2);
+        }
+
+        .progress-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(232, 196, 240, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.completed {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+        }
+
+        .progress-dot.current {
+            background: linear-gradient(135deg, #e8c4f0 0%, #d4a0e8 100%);
+            box-shadow: 0 0 12px rgba(232, 196, 240, 0.8);
+            transform: scale(1.4);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1.4); opacity: 1; }
+            50% { transform: scale(1.6); opacity: 0.8; }
+        }
+
+        .progress-text {
+            color: #e8c4f0;
+            font-weight: 700;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .progress-bar-container {
+            flex: 1;
+            max-width: 150px;
+            height: 6px;
+            background: rgba(232, 196, 240, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e8c4f0 0%, #d4a0e8 100%);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 8px rgba(232, 196, 240, 0.5);
+        }
+
+        /* Current Round Highlighting */
+        .header-item.current-round {
+            background: rgba(232, 196, 240, 0.2);
+            box-shadow: 0 0 12px rgba(232, 196, 240, 0.4);
+            position: relative;
+            border-color: rgba(232, 196, 240, 0.6);
+        }
+
+        .header-item.current-round::after {
+            content: '◆';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #e8c4f0;
+            font-size: 0.7em;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-2px); }
+        }
+
+        .score-display.current-round,
+        .score-input.current-round {
+            background: rgba(232, 196, 240, 0.15) !important;
+            box-shadow: 0 0 10px rgba(232, 196, 240, 0.3);
+            border-color: rgba(232, 196, 240, 0.5) !important;
+        }
+
+        /* Position Change Indicators */
+        .rank-change {
+            font-size: 0.75em;
+            margin-left: 6px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .rank-change.up {
+            color: #4caf50;
+        }
+
+        .rank-change.down {
+            color: #f44336;
+        }
+
+        .rank-change.same {
+            color: #999;
+            opacity: 0.7;
+        }
+
+        /* Save Feedback Animation */
+        @keyframes saveFlash {
+            0% { background: inherit; }
+            30% { background: rgba(76, 175, 80, 0.25); box-shadow: 0 0 15px rgba(76, 175, 80, 0.4); }
+            100% { background: inherit; }
+        }
+
+        .team-row.save-flash {
+            animation: saveFlash 1s ease;
+        }
+
+        /* Keyboard Shortcut Hint */
+        .keyboard-hint {
+            position: fixed;
+            bottom: 15px;
+            left: 15px;
+            padding: 8px 12px;
+            background: rgba(26, 10, 46, 0.95);
+            border: 1px solid rgba(232, 196, 240, 0.3);
+            border-radius: 6px;
+            color: #999;
+            font-size: 0.75em;
+            z-index: 1000;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .keyboard-hint:hover {
+            opacity: 1;
+        }
+
+        .keyboard-hint code {
+            background: rgba(232, 196, 240, 0.15);
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: #e8c4f0;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
         }
 
         .advertisement-section {
@@ -1610,7 +1775,6 @@
             <div class="column-headers">
                 <div class="header-item">#</div>
                 <div class="header-team">Team</div>
-                <div class="header-item">TR</div>
                 <div class="header-item">R1</div>
                 <div class="header-item">R2</div>
                 <div class="header-item">R3</div>
@@ -1637,7 +1801,6 @@
                 <div class="column-headers">
                     <div class="header-item">#</div>
                     <div class="header-team">Team</div>
-                    <div class="header-item">TR</div>
                     <div class="header-item">R1</div>
                     <div class="header-item">R2</div>
                     <div class="header-item">R3</div>
@@ -1665,18 +1828,32 @@
 
                 <!-- Tab 1: Quick Entry -->
                 <div class="tab-content active" id="quickEntryTab">
+                    <!-- Progress Indicator -->
+                    <div class="progress-indicator">
+                        <div class="progress-dots">
+                            <div class="progress-dot" data-round="0"></div>
+                            <div class="progress-dot" data-round="1"></div>
+                            <div class="progress-dot" data-round="2"></div>
+                            <div class="progress-dot" data-round="3"></div>
+                            <div class="progress-dot" data-round="4"></div>
+                        </div>
+                        <div class="progress-text" id="progressText">Round - of 5</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" id="progressBarFill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
                     <div class="round-selector-header">
                         <h3>Select Round</h3>
                         <p>Enter scores for all teams at once</p>
                     </div>
                     
                     <div class="round-buttons">
-                        <button class="round-btn" onclick="selectRound(0)">TR</button>
-                        <button class="round-btn" onclick="selectRound(1)">R1</button>
-                        <button class="round-btn" onclick="selectRound(2)">R2</button>
-                        <button class="round-btn" onclick="selectRound(3)">R3</button>
-                        <button class="round-btn" onclick="selectRound(4)">R4</button>
-                        <button class="round-btn" onclick="selectRound(5)">R5</button>
+                        <button class="round-btn" onclick="selectRound(0)">R1</button>
+                        <button class="round-btn" onclick="selectRound(1)">R2</button>
+                        <button class="round-btn" onclick="selectRound(2)">R3</button>
+                        <button class="round-btn" onclick="selectRound(3)">R4</button>
+                        <button class="round-btn" onclick="selectRound(4)">R5</button>
                     </div>
 
                     <div class="quick-entry-panel" id="quickEntryPanel">
@@ -1723,6 +1900,11 @@
 
         <div class="host-hint" id="hostHint">
             ✏️ Host Mode Active - Use tabs on the right! →
+        </div>
+
+        <!-- Keyboard Shortcuts Hint -->
+        <div class="keyboard-hint" id="keyboardHint" style="display:none;">
+            ⌨️ <code>1-5</code> Select Round | <code>Enter</code> Save | <code>Tab</code> Next Team
         </div>
 
         <div class="host-controls" id="hostControls" style="display:none;">
@@ -1772,11 +1954,11 @@
         <div class="advertisement-section">
             <h3>🎉 Support Our Cause</h3>
             <div class="ad-links">
-                <a href="https://www.gofundme.com/f/keep-our-mum-jumping" target="_blank" class="ad-link gofundme">
+                <a href="https://fundraise.cancerresearchuk.org/page/arianes-giving-page-22?" target="_blank" class="ad-link gofundme">
                     <span class="ad-icon">💝</span>
                     <div class="ad-content">
                         <strong>Donate Now</strong>
-                        <span>Help Keep Our Mum Jumping</span>
+                        <span>Ariane's London Marathon fundraising page</span>
                     </div>
                 </a>
                 <a href="https://purplesams.wordpress.com/" target="_blank" class="ad-link blog">
@@ -1790,7 +1972,7 @@
         </div>
 
         <div class="event-branding">
-            <h3>31 January | 6:30PM - LATE</h3>
+            <h3>31st January | 6:30PM - 11:30PM</h3>
             <p>Knebworth Golf Club</p>
             <p style="margin-top: 10px; font-size: 0.9em; opacity: 0.9;">Bowelbabe Fund for Cancer Research UK</p>
         </div>
@@ -1802,11 +1984,13 @@
 
     <script>
         let isHostMode = false;
-        const HOST_PASSWORD = 'music2024';
+        const HOST_PASSWORD = 'simba123';
         let db = null;
         let currentRound = null;
         let undoStack = [];
         let quickEntryData = {};
+        let previousRankings = {}; // Track position changes
+        let completedRounds = []; // Track completed rounds
 
         // Handle host mode toggle
         document.getElementById('hostModeCheckbox').addEventListener('change', function(e) {
@@ -1821,10 +2005,15 @@
                     document.getElementById('hostHint').classList.add('active');
                     document.getElementById('hostControls').classList.add('active');
                     showToast('✅ Host mode activated! Use the panel on the right →');
+                    document.getElementById('keyboardHint').style.display = 'block';
                     // Re-render to show input fields
                     if (db) {
                         db.collection('quiz').doc('teams').get().then((doc) => {
                             if (doc.exists) {
+                                // Save current rankings BEFORE entering host mode
+                                // This way when we exit, we can compare against these rankings
+                                updateRankings(doc.data());
+                                
                                 renderScoreboard(doc.data());
                                 renderQuickEntry(doc.data());
                                 renderTeamManagement(doc.data());
@@ -1843,6 +2032,7 @@
                 document.getElementById('hostModeLayout').classList.remove('active');
                 document.getElementById('hostHint').classList.remove('active');
                 document.getElementById('hostControls').classList.remove('active');
+                document.getElementById('keyboardHint').style.display = 'none';
                 // Re-render to show display fields
                 if (db) {
                     db.collection('quiz').doc('teams').get().then((doc) => {
@@ -1872,12 +2062,19 @@
             // Listen for changes
             db.collection('quiz').doc('teams').onSnapshot((doc) => {
                 if (doc.exists) {
+                    const data = doc.data();
+                    
+                    // Initialize rankings if this is the first load
+                    if (Object.keys(previousRankings).length === 0) {
+                        updateRankings(data);
+                    }
+                    
                     if (isHostMode) {
-                        renderScoreboard(doc.data());
-                        renderQuickEntry(doc.data());
-                        renderTeamManagement(doc.data());
+                        renderScoreboard(data);
+                        renderQuickEntry(data);
+                        renderTeamManagement(data);
                     } else {
-                        renderScoreboardGuest(doc.data());
+                        renderScoreboardGuest(data);
                     }
                     updateLastUpdated();
                 }
@@ -1916,6 +2113,9 @@
                 return;
             }
 
+            // Calculate rank changes
+            const rankChanges = calculateRankChanges(data);
+
             // Desktop layout
             const desktopHTML = teams.map((team, index) => {
                 let rankClass = '';
@@ -1923,7 +2123,7 @@
                 
                 if (index === 0 && team.total > 0) { 
                     rankClass = 'rank-1'; 
-                    rankEmoji = '👑'; 
+                    rankEmoji = '🥇'; 
                 } else if (index === 1 && team.total > 0) { 
                     rankClass = 'rank-2'; 
                     rankEmoji = '🥈'; 
@@ -1936,7 +2136,7 @@
                     ? `<input type="text" class="team-name-input" value="${team.name}" data-team="${team.key}">`
                     : `<div class="team-name-display">${team.name}</div>`;
 
-                const scoresHTML = [0, 1, 2, 3, 4, 5].map(roundIndex => {
+                const scoresHTML = [0, 1, 2, 3, 4].map(roundIndex => {
                     const score = team.rounds[roundIndex];
                     if (isHostMode) {
                         return `<input type="number" class="score-input" value="${score}" min="0" data-team="${team.key}" data-round="${roundIndex}">`;
@@ -1959,7 +2159,6 @@
             const mobileHTML = `
                 <div class="mobile-round-labels-wrapper">
                     <div class="mobile-round-labels">
-                        <span class="mobile-round-label">TR</span>
                         <span class="mobile-round-label">R1</span>
                         <span class="mobile-round-label">R2</span>
                         <span class="mobile-round-label">R3</span>
@@ -1974,7 +2173,7 @@
                 
                 if (index === 0 && team.total > 0) { 
                     rankClass = 'rank-1'; 
-                    rankEmoji = '👑'; 
+                    rankEmoji = '🥇'; 
                 } else if (index === 1 && team.total > 0) { 
                     rankClass = 'rank-2'; 
                     rankEmoji = '🥈'; 
@@ -1987,7 +2186,7 @@
                     ? `<input type="text" class="mobile-team-name-input" value="${team.name}" data-team="${team.key}">`
                     : `<div class="mobile-team-name-display">${team.name}</div>`;
 
-                const scoresHTML = [0, 1, 2, 3, 4, 5].map(roundIndex => {
+                const scoresHTML = [0, 1, 2, 3, 4].map(roundIndex => {
                     const score = team.rounds[roundIndex];
                     if (isHostMode) {
                         return `<input type="number" class="mobile-score-input" value="${score}" min="0" data-team="${team.key}" data-round="${roundIndex}">`;
@@ -2070,6 +2269,9 @@
                 return;
             }
 
+            // Calculate rank changes
+            const rankChanges = calculateRankChanges(data);
+
             // Desktop layout (view only)
             const desktopHTML = teams.map((team, index) => {
                 let rankClass = '';
@@ -2077,7 +2279,7 @@
                 
                 if (index === 0 && team.total > 0) { 
                     rankClass = 'rank-1'; 
-                    rankEmoji = '👑'; 
+                    rankEmoji = '🥇'; 
                 } else if (index === 1 && team.total > 0) { 
                     rankClass = 'rank-2'; 
                     rankEmoji = '🥈'; 
@@ -2086,7 +2288,20 @@
                     rankEmoji = '🥉'; 
                 }
 
-                const scoresHTML = [0, 1, 2, 3, 4, 5].map(roundIndex => {
+                // Add rank change indicator
+                let rankChangeHTML = '';
+                if (rankChanges[team.key] && team.total > 0) {
+                    const change = rankChanges[team.key];
+                    if (change.direction === 'up' && change.change > 0) {
+                        rankChangeHTML = `<span class="rank-change up">↑${change.change}</span>`;
+                    } else if (change.direction === 'down' && change.change > 0) {
+                        rankChangeHTML = `<span class="rank-change down">↓${change.change}</span>`;
+                    } else {
+                        rankChangeHTML = `<span class="rank-change same">➡</span>`;
+                    }
+                }
+
+                const scoresHTML = [0, 1, 2, 3, 4].map(roundIndex => {
                     const score = team.rounds[roundIndex];
                     return `<div class="score-display">${score}</div>`;
                 }).join('');
@@ -2094,7 +2309,7 @@
                 return `
                     <div class="team-row ${rankClass}">
                         <div class="team-rank">${rankEmoji}</div>
-                        <div class="team-name-display">${team.name}</div>
+                        <div class="team-name-display">${team.name}${rankChangeHTML}</div>
                         ${scoresHTML}
                         <div class="team-total">${team.total}</div>
                     </div>
@@ -2105,7 +2320,6 @@
             const mobileHTML = `
                 <div class="mobile-round-labels-wrapper">
                     <div class="mobile-round-labels">
-                        <span class="mobile-round-label">TR</span>
                         <span class="mobile-round-label">R1</span>
                         <span class="mobile-round-label">R2</span>
                         <span class="mobile-round-label">R3</span>
@@ -2120,7 +2334,7 @@
                 
                 if (index === 0 && team.total > 0) { 
                     rankClass = 'rank-1'; 
-                    rankEmoji = '👑'; 
+                    rankEmoji = '🥇'; 
                 } else if (index === 1 && team.total > 0) { 
                     rankClass = 'rank-2'; 
                     rankEmoji = '🥈'; 
@@ -2129,7 +2343,7 @@
                     rankEmoji = '🥉'; 
                 }
 
-                const scoresHTML = [0, 1, 2, 3, 4, 5].map(roundIndex => {
+                const scoresHTML = [0, 1, 2, 3, 4].map(roundIndex => {
                     const score = team.rounds[roundIndex];
                     return `<div class="mobile-score-display">${score}</div>`;
                 }).join('');
@@ -2242,7 +2456,7 @@
                 const newTeamKey = `team${teamIndex}`;
                 data[newTeamKey] = {
                     name: teamName.trim(),
-                    rounds: [0, 0, 0, 0, 0, 0],
+                    rounds: [0, 0, 0, 0, 0],
                     total: 0
                 };
 
@@ -2325,7 +2539,7 @@
                 return;
             }
             
-            const roundNames = ['TR', 'R1', 'R2', 'R3', 'R4', 'R5'];
+            const roundNames = ['R1', 'R2', 'R3', 'R4', 'R5'];
             const teams = Object.entries(data)
                 .filter(([key]) => key.startsWith('team'))
                 .map(([key, value]) => ({ key, ...value }))
@@ -2385,6 +2599,7 @@
             if (currentRound === null) return;
             
             const saveBtn = document.getElementById('saveRoundBtn');
+            const round = currentRound;
             saveBtn.disabled = true;
             saveBtn.textContent = '💾 Saving...';
             
@@ -2408,15 +2623,24 @@
                 
                 await teamsRef.set(data);
                 
-                const roundNames = ['TR', 'R1', 'R2', 'R3', 'R4', 'R5'];
+                // Mark round as completed
+                if (!completedRounds.includes(round)) {
+                    completedRounds.push(round);
+                }
+                
+                // Update UI
+                updateProgressIndicator();
+                highlightCurrentRound();
+                
+                const roundNames = ['R1', 'R2', 'R3', 'R4', 'R5'];
                 showToast(`✅ ${roundNames[currentRound]} scores saved!`);
-                saveBtn.textContent = '💾 Save All Scores for This Round';
+                saveBtn.textContent = '💾 Save Round Scores';
                 saveBtn.disabled = false;
                 
             } catch (error) {
                 console.error('Error saving scores:', error);
                 alert('Error saving scores!');
-                saveBtn.textContent = '💾 Save All Scores for This Round';
+                saveBtn.textContent = '💾 Save Round Scores';
                 saveBtn.disabled = false;
             }
         }
@@ -2541,6 +2765,191 @@
         };
 
         window.switchTab = switchTab;
+
+        // ============================================
+        // UI IMPROVEMENTS - MAIN FUNCTIONS
+        // ============================================
+
+        // 1. Update Progress Indicator
+        function updateProgressIndicator() {
+            if (currentRound === null) {
+                document.getElementById('progressText').textContent = 'Round - of 5';
+                return;
+            }
+            
+            const roundNum = currentRound + 1;
+            const percentage = Math.round((completedRounds.length / 5) * 100);
+            
+            document.getElementById('progressText').textContent = `Round ${roundNum} of 5`;
+            document.getElementById('progressBarFill').style.width = percentage + '%';
+            
+            // Update dots
+            document.querySelectorAll('.progress-dot').forEach((dot, idx) => {
+                dot.classList.remove('completed', 'current');
+                if (completedRounds.includes(idx)) {
+                    dot.classList.add('completed');
+                } else if (idx === currentRound) {
+                    dot.classList.add('current');
+                }
+            });
+        }
+
+        // 2. Highlight Current Round Column
+        function highlightCurrentRound() {
+            // Remove previous highlights
+            document.querySelectorAll('.current-round').forEach(el => {
+                el.classList.remove('current-round');
+            });
+            
+            if (currentRound === null) return;
+            
+            // Add 1 to skip the # column (Team uses .header-team, not .header-item)
+            const columnIndex = currentRound + 1;
+            
+            // Highlight all column headers
+            document.querySelectorAll('.column-headers').forEach(headerRow => {
+                const headers = headerRow.querySelectorAll('.header-item');
+                if (headers[columnIndex]) {
+                    headers[columnIndex].classList.add('current-round');
+                }
+            });
+            
+            // Highlight all scores in this column in the grid
+            // Team rows have: rank(0), team(1), r1(2), r2(3), r3(4), r4(5), r5(6), total(7)
+            const teamRowColumnIndex = currentRound + 2; // +2 for rank and team columns
+            document.querySelectorAll('.team-row').forEach(row => {
+                const cells = row.children;
+                if (cells[teamRowColumnIndex]) {
+                    cells[teamRowColumnIndex].classList.add('current-round');
+                }
+            });
+        }
+
+        // 3. Calculate Rank Changes
+        function calculateRankChanges(data) {
+            const teams = Object.entries(data)
+                .filter(([key]) => key.startsWith('team'))
+                .map(([key, value]) => ({ key, ...value }))
+                .sort((a, b) => b.total - a.total);
+            
+            const changes = {};
+            const hasCompletedRounds = completedRounds.length > 0;
+            
+            teams.forEach((team, newRank) => {
+                const oldRank = previousRankings[team.key];
+                
+                // Only show arrows if we've completed at least one round AND team has a previous ranking
+                if (hasCompletedRounds && oldRank !== undefined) {
+                    const change = oldRank - newRank;
+                    
+                    // Only add to changes if there actually is a change OR if team has points
+                    if (change !== 0 || team.total > 0) {
+                        changes[team.key] = {
+                            direction: change > 0 ? 'up' : change < 0 ? 'down' : 'same',
+                            change: Math.abs(change)
+                        };
+                    }
+                }
+            });
+            
+            return changes;
+        }
+
+        // Update rankings after save (call this AFTER showing arrows)
+        function updateRankings(data) {
+            const teams = Object.entries(data)
+                .filter(([key]) => key.startsWith('team'))
+                .map(([key, value]) => ({ key, ...value }))
+                .sort((a, b) => b.total - a.total);
+            
+            teams.forEach((team, newRank) => {
+                previousRankings[team.key] = newRank;
+            });
+        }
+
+        // 4. Flash Team Row (Visual Feedback)
+        function flashTeamRow(teamKey) {
+            const rows = document.querySelectorAll('.team-row');
+            rows.forEach(row => {
+                const inputs = row.querySelectorAll(`[data-team="${teamKey}"]`);
+                if (inputs.length > 0) {
+                    row.classList.add('save-flash');
+                    setTimeout(() => {
+                        row.classList.remove('save-flash');
+                    }, 1000);
+                }
+            });
+        }
+
+        // 5. Keyboard Shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (!isHostMode) return;
+            
+            // Don't trigger if typing in input (except Tab and Enter)
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                if (e.key === 'Enter' && currentRound !== null) {
+                    e.preventDefault();
+                    saveRoundScores();
+                }
+                return;
+            }
+            
+            // Numbers 1-5 for rounds
+            if (e.key >= '1' && e.key <= '5') {
+                const roundIndex = parseInt(e.key) - 1;
+                selectRound(roundIndex);
+                // Switch to Quick Entry tab
+                switchTab('quickEntry');
+                e.preventDefault();
+            }
+            
+            // Enter to save
+            if (e.key === 'Enter' && currentRound !== null) {
+                saveRoundScores();
+                e.preventDefault();
+            }
+            
+            // Escape to clear
+            if (e.key === 'Escape') {
+                currentRound = null;
+                document.querySelectorAll('.round-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.getElementById('saveRoundBtn').disabled = true;
+                updateProgressIndicator();
+                highlightCurrentRound();
+                e.preventDefault();
+            }
+        });
+
+        // 6. Enhance selectRound
+        const originalSelectRound = selectRound;
+        selectRound = function(roundIndex) {
+            originalSelectRound(roundIndex);
+            updateProgressIndicator();
+            highlightCurrentRound();
+        };
+
+        // 7. Enhance saveRoundScores
+        const originalSaveRoundScores = saveRoundScores;
+        saveRoundScores = async function() {
+            const round = currentRound;
+            await originalSaveRoundScores();
+            
+            // Mark round as completed
+            if (round !== null && !completedRounds.includes(round)) {
+                completedRounds.push(round);
+            }
+            
+            updateProgressIndicator();
+            
+            // Flash all updated teams
+            setTimeout(() => {
+                Object.keys(quickEntryData).forEach(teamKey => {
+                    flashTeamRow(teamKey);
+                });
+            }, 100);
+        };
 
         // Full screen mode toggle
         let isFullscreen = false;
