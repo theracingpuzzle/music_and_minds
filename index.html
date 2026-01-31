@@ -1828,21 +1828,6 @@
 
                 <!-- Tab 1: Quick Entry -->
                 <div class="tab-content active" id="quickEntryTab">
-                    <!-- Progress Indicator -->
-                    <div class="progress-indicator">
-                        <div class="progress-dots">
-                            <div class="progress-dot" data-round="0"></div>
-                            <div class="progress-dot" data-round="1"></div>
-                            <div class="progress-dot" data-round="2"></div>
-                            <div class="progress-dot" data-round="3"></div>
-                            <div class="progress-dot" data-round="4"></div>
-                        </div>
-                        <div class="progress-text" id="progressText">Round - of 5</div>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar-fill" id="progressBarFill" style="width: 0%"></div>
-                        </div>
-                    </div>
-
                     <div class="round-selector-header">
                         <h3>Select Round</h3>
                         <p>Enter scores for all teams at once</p>
@@ -1989,8 +1974,6 @@
         let currentRound = null;
         let undoStack = [];
         let quickEntryData = {};
-        let previousRankings = {}; // Track position changes
-        let completedRounds = []; // Track completed rounds
 
         // Handle host mode toggle
         document.getElementById('hostModeCheckbox').addEventListener('change', function(e) {
@@ -2010,10 +1993,6 @@
                     if (db) {
                         db.collection('quiz').doc('teams').get().then((doc) => {
                             if (doc.exists) {
-                                // Save current rankings BEFORE entering host mode
-                                // This way when we exit, we can compare against these rankings
-                                updateRankings(doc.data());
-                                
                                 renderScoreboard(doc.data());
                                 renderQuickEntry(doc.data());
                                 renderTeamManagement(doc.data());
@@ -2064,11 +2043,6 @@
                 if (doc.exists) {
                     const data = doc.data();
                     
-                    // Initialize rankings if this is the first load
-                    if (Object.keys(previousRankings).length === 0) {
-                        updateRankings(data);
-                    }
-                    
                     if (isHostMode) {
                         renderScoreboard(data);
                         renderQuickEntry(data);
@@ -2099,7 +2073,18 @@
             const teams = Object.entries(data)
                 .filter(([key]) => key.startsWith('team')) // Filter out 'initialized' key
                 .map(([key, value]) => ({ key, ...value }))
-                .sort((a, b) => b.total - a.total);
+                .sort((a, b) => {
+                    // If totals are different, sort by total (highest first)
+                    if (b.total !== a.total) {
+                        return b.total - a.total;
+                    }
+                    // If both have 0 points, keep creation order (by key)
+                    if (a.total === 0 && b.total === 0) {
+                        return a.key.localeCompare(b.key);
+                    }
+                    // If totals are equal (but not 0), sort alphabetically by name
+                    return a.name.localeCompare(b.name);
+                });
 
             const scoreboardDiv = document.getElementById('scoreboard');
             
@@ -2112,9 +2097,6 @@
                 `;
                 return;
             }
-
-            // Calculate rank changes
-            const rankChanges = calculateRankChanges(data);
 
             // Desktop layout
             const desktopHTML = teams.map((team, index) => {
@@ -2255,7 +2237,18 @@
             const teams = Object.entries(data)
                 .filter(([key]) => key.startsWith('team'))
                 .map(([key, value]) => ({ key, ...value }))
-                .sort((a, b) => b.total - a.total);
+                .sort((a, b) => {
+                    // If totals are different, sort by total (highest first)
+                    if (b.total !== a.total) {
+                        return b.total - a.total;
+                    }
+                    // If both have 0 points, keep creation order (by key)
+                    if (a.total === 0 && b.total === 0) {
+                        return a.key.localeCompare(b.key);
+                    }
+                    // If totals are equal (but not 0), sort alphabetically by name
+                    return a.name.localeCompare(b.name);
+                });
 
             const scoreboardDiv = document.getElementById('scoreboardGuest');
             
@@ -2268,9 +2261,6 @@
                 `;
                 return;
             }
-
-            // Calculate rank changes
-            const rankChanges = calculateRankChanges(data);
 
             // Desktop layout (view only)
             const desktopHTML = teams.map((team, index) => {
@@ -2288,19 +2278,6 @@
                     rankEmoji = '🥉'; 
                 }
 
-                // Add rank change indicator
-                let rankChangeHTML = '';
-                if (rankChanges[team.key] && team.total > 0) {
-                    const change = rankChanges[team.key];
-                    if (change.direction === 'up' && change.change > 0) {
-                        rankChangeHTML = `<span class="rank-change up">↑${change.change}</span>`;
-                    } else if (change.direction === 'down' && change.change > 0) {
-                        rankChangeHTML = `<span class="rank-change down">↓${change.change}</span>`;
-                    } else {
-                        rankChangeHTML = `<span class="rank-change same">➡</span>`;
-                    }
-                }
-
                 const scoresHTML = [0, 1, 2, 3, 4].map(roundIndex => {
                     const score = team.rounds[roundIndex];
                     return `<div class="score-display">${score}</div>`;
@@ -2309,7 +2286,7 @@
                 return `
                     <div class="team-row ${rankClass}">
                         <div class="team-rank">${rankEmoji}</div>
-                        <div class="team-name-display">${team.name}${rankChangeHTML}</div>
+                        <div class="team-name-display">${team.name}</div>
                         ${scoresHTML}
                         <div class="team-total">${team.total}</div>
                     </div>
@@ -2596,7 +2573,12 @@
         }
 
         async function saveRoundScores() {
-            if (currentRound === null) return;
+            if (currentRound === null) {
+                console.log('No round selected');
+                return;
+            }
+            
+            console.log('Starting save for round:', currentRound);
             
             const saveBtn = document.getElementById('saveRoundBtn');
             const round = currentRound;
@@ -2604,9 +2586,13 @@
             saveBtn.textContent = '💾 Saving...';
             
             try {
+                console.log('Getting teams data...');
                 const teamsRef = db.collection('quiz').doc('teams');
                 const doc = await teamsRef.get();
                 const data = doc.data();
+                
+                console.log('Current data:', data);
+                console.log('Quick entry data:', quickEntryData);
                 
                 // Save previous state for undo
                 undoStack.push(JSON.parse(JSON.stringify(data)));
@@ -2616,30 +2602,27 @@
                 // Update scores for this round
                 Object.keys(quickEntryData).forEach(teamKey => {
                     if (data[teamKey]) {
+                        console.log(`Updating ${teamKey} round ${currentRound} to ${quickEntryData[teamKey]}`);
                         data[teamKey].rounds[currentRound] = quickEntryData[teamKey];
                         data[teamKey].total = data[teamKey].rounds.reduce((sum, score) => sum + score, 0);
                     }
                 });
                 
+                console.log('Saving to Firebase...');
                 await teamsRef.set(data);
-                
-                // Mark round as completed
-                if (!completedRounds.includes(round)) {
-                    completedRounds.push(round);
-                }
-                
-                // Update UI
-                updateProgressIndicator();
-                highlightCurrentRound();
+                console.log('Save successful!');
                 
                 const roundNames = ['R1', 'R2', 'R3', 'R4', 'R5'];
                 showToast(`✅ ${roundNames[currentRound]} scores saved!`);
                 saveBtn.textContent = '💾 Save Round Scores';
                 saveBtn.disabled = false;
                 
+                console.log('Save complete!');
+                
             } catch (error) {
                 console.error('Error saving scores:', error);
-                alert('Error saving scores!');
+                console.error('Error stack:', error.stack);
+                alert('Error saving scores! Check console for details.');
                 saveBtn.textContent = '💾 Save Round Scores';
                 saveBtn.disabled = false;
             }
@@ -2770,104 +2753,7 @@
         // UI IMPROVEMENTS - MAIN FUNCTIONS
         // ============================================
 
-        // 1. Update Progress Indicator
-        function updateProgressIndicator() {
-            if (currentRound === null) {
-                document.getElementById('progressText').textContent = 'Round - of 5';
-                return;
-            }
-            
-            const roundNum = currentRound + 1;
-            const percentage = Math.round((completedRounds.length / 5) * 100);
-            
-            document.getElementById('progressText').textContent = `Round ${roundNum} of 5`;
-            document.getElementById('progressBarFill').style.width = percentage + '%';
-            
-            // Update dots
-            document.querySelectorAll('.progress-dot').forEach((dot, idx) => {
-                dot.classList.remove('completed', 'current');
-                if (completedRounds.includes(idx)) {
-                    dot.classList.add('completed');
-                } else if (idx === currentRound) {
-                    dot.classList.add('current');
-                }
-            });
-        }
-
-        // 2. Highlight Current Round Column
-        function highlightCurrentRound() {
-            // Remove previous highlights
-            document.querySelectorAll('.current-round').forEach(el => {
-                el.classList.remove('current-round');
-            });
-            
-            if (currentRound === null) return;
-            
-            // Add 1 to skip the # column (Team uses .header-team, not .header-item)
-            const columnIndex = currentRound + 1;
-            
-            // Highlight all column headers
-            document.querySelectorAll('.column-headers').forEach(headerRow => {
-                const headers = headerRow.querySelectorAll('.header-item');
-                if (headers[columnIndex]) {
-                    headers[columnIndex].classList.add('current-round');
-                }
-            });
-            
-            // Highlight all scores in this column in the grid
-            // Team rows have: rank(0), team(1), r1(2), r2(3), r3(4), r4(5), r5(6), total(7)
-            const teamRowColumnIndex = currentRound + 2; // +2 for rank and team columns
-            document.querySelectorAll('.team-row').forEach(row => {
-                const cells = row.children;
-                if (cells[teamRowColumnIndex]) {
-                    cells[teamRowColumnIndex].classList.add('current-round');
-                }
-            });
-        }
-
-        // 3. Calculate Rank Changes
-        function calculateRankChanges(data) {
-            const teams = Object.entries(data)
-                .filter(([key]) => key.startsWith('team'))
-                .map(([key, value]) => ({ key, ...value }))
-                .sort((a, b) => b.total - a.total);
-            
-            const changes = {};
-            const hasCompletedRounds = completedRounds.length > 0;
-            
-            teams.forEach((team, newRank) => {
-                const oldRank = previousRankings[team.key];
-                
-                // Only show arrows if we've completed at least one round AND team has a previous ranking
-                if (hasCompletedRounds && oldRank !== undefined) {
-                    const change = oldRank - newRank;
-                    
-                    // Only add to changes if there actually is a change OR if team has points
-                    if (change !== 0 || team.total > 0) {
-                        changes[team.key] = {
-                            direction: change > 0 ? 'up' : change < 0 ? 'down' : 'same',
-                            change: Math.abs(change)
-                        };
-                    }
-                }
-            });
-            
-            return changes;
-        }
-
-        // Update rankings after save (call this AFTER showing arrows)
-        function updateRankings(data) {
-            const teams = Object.entries(data)
-                .filter(([key]) => key.startsWith('team'))
-                .map(([key, value]) => ({ key, ...value }))
-                .sort((a, b) => b.total - a.total);
-            
-            teams.forEach((team, newRank) => {
-                previousRankings[team.key] = newRank;
-            });
-        }
-
-        // 4. Flash Team Row (Visual Feedback)
+        // Flash Team Row (Visual Feedback)
         function flashTeamRow(teamKey) {
             const rows = document.querySelectorAll('.team-row');
             rows.forEach(row => {
@@ -2881,11 +2767,11 @@
             });
         }
 
-        // 5. Keyboard Shortcuts
+        // Keyboard Shortcuts (simplified)
         document.addEventListener('keydown', function(e) {
             if (!isHostMode) return;
             
-            // Don't trigger if typing in input (except Tab and Enter)
+            // Don't trigger if typing in input (except Enter)
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
                 if (e.key === 'Enter' && currentRound !== null) {
                     e.preventDefault();
@@ -2898,7 +2784,6 @@
             if (e.key >= '1' && e.key <= '5') {
                 const roundIndex = parseInt(e.key) - 1;
                 selectRound(roundIndex);
-                // Switch to Quick Entry tab
                 switchTab('quickEntry');
                 e.preventDefault();
             }
@@ -2916,41 +2801,11 @@
                     btn.classList.remove('active');
                 });
                 document.getElementById('saveRoundBtn').disabled = true;
-                updateProgressIndicator();
-                highlightCurrentRound();
                 e.preventDefault();
             }
         });
 
-        // 6. Enhance selectRound
-        const originalSelectRound = selectRound;
-        selectRound = function(roundIndex) {
-            originalSelectRound(roundIndex);
-            updateProgressIndicator();
-            highlightCurrentRound();
-        };
-
         // 7. Enhance saveRoundScores
-        const originalSaveRoundScores = saveRoundScores;
-        saveRoundScores = async function() {
-            const round = currentRound;
-            await originalSaveRoundScores();
-            
-            // Mark round as completed
-            if (round !== null && !completedRounds.includes(round)) {
-                completedRounds.push(round);
-            }
-            
-            updateProgressIndicator();
-            
-            // Flash all updated teams
-            setTimeout(() => {
-                Object.keys(quickEntryData).forEach(teamKey => {
-                    flashTeamRow(teamKey);
-                });
-            }, 100);
-        };
-
         // Full screen mode toggle
         let isFullscreen = false;
         
